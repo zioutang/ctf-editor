@@ -6,7 +6,7 @@ import {
   RichUtils,
 } from 'draft-js';
 import {
-  MyEditor,
+  DocEditor,
 } from './Containers/Editor';
 
 
@@ -18,4 +18,4 @@ import {
 //   })
 
 ReactDOM.render(
-  <MyEditor />, document.getElementById('root'));
+  <Editor />, document.getElementById('root'));

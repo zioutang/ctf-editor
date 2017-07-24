@@ -1,27 +1,30 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {
-  ToolBar
-}
-from '../Components/EditorComponents/ToolBar';
+
 import {
   Editor,
   EditorState,
-  RichUtils
-}
-from 'draft-js';
+  RichUtils,
+} from 'draft-js';
 
-class MyEditor extends React.Component {
+import {
+  ToolBar,
+} from '../Components/EditorComponents/ToolBar';
+import {
+  TextEditor,
+} from '../Components/EditorComponents/TextEditor';
+
+
+class DocEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
       Bold: 'BOLD',
       Italic: 'ITALIC',
-      Underline: 'UNDERLINE'
+      Underline: 'UNDERLINE',
     };
-    this.onChange = (editorState) => this.setState({
-      editorState
+    this.onChange = editorState => this.setState({
+      editorState,
     });
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
@@ -53,7 +56,7 @@ class MyEditor extends React.Component {
           Italic={this._onItalicClick.bind(this)}
           Underline={this._onUnderlineClick.bind(this)}
         />
-        <Editor editorState={this.state.editorState}
+        <TextEditor editorState={this.state.editorState}
           handleKeyCommand={this.handleKeyCommand}
           onChange={this.onChange}/>
       </div>
@@ -62,5 +65,5 @@ class MyEditor extends React.Component {
 }
 
 module.exports = {
-  MyEditor: MyEditor
-}
+  DocEditor,
+};

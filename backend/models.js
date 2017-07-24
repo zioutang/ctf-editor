@@ -1,0 +1,40 @@
+import mongoose from 'mongoose';
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI);
+
+const User = mongoose.model('User', {
+  fname: {
+    type: String,
+    required: true,
+  },
+  lname: {
+    type: String,
+    required: true,
+  },
+  owned: {
+    type: Array,
+  },
+  collaborated: {
+    type: Array,
+  },
+});
+
+const Document = mongoose.model('Document', {
+  body: {
+    type: String,
+  },
+  author: {
+    type: String,
+    required: true,
+  },
+  collaborators: {
+    type: Array,
+    required: true,
+  },
+});
+
+module.exports = {
+  User,
+  Document,
+};

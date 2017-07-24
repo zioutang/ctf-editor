@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-quick-start",
+  "name": "ctf-editor",
   "version": "1.0.0",
   "description": "A minimal Electron application with React and Express",
   "main": "main.js",
@@ -13,10 +13,10 @@
     "start": "electron main.js",
     "server": "node backend/server.js"
   },
-  "repository": "",
+  "repository": "https://github.com/brianfakhoury/ctf-editor.git",
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "Jeffrey Chen, Brian Fakhoury, Jay Tang",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-eslint": "^6.1.0",

@@ -1,5 +1,5 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
@@ -7,5 +7,32 @@ var ReactDOM = require('react-dom');
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-ReactDOM.render(<p>React lives!</p>,
-   document.getElementById('root'));
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        This is App
+        <Editor />
+      </div>
+    );
+  }
+}
+
+class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div style={{ border: '1 black solid' }}>
+        <p>This is Editor</p>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />,
+  document.getElementById('root'));

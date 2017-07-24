@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {
   ToolBar
 }
-from './ToolBar.js';
+from '../Components/EditorComponents/ToolBar';
 import {
   Editor,
   EditorState,
@@ -45,7 +45,6 @@ class MyEditor extends React.Component {
   _onUnderlineClick() {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.Underline));
   }
-
   render() {
     return (
       <div>

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {
   ToolBar
 }
-from './ToolBar.js';
+from '../Components/EditorComponents/ToolBar';
 import {
   Editor,
   EditorState,

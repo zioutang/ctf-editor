@@ -15,10 +15,14 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
+<<<<<<< HEAD
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600
   });
+=======
+  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+>>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -26,21 +30,29 @@ function createWindow() {
       'index.dev.html' :
       'index.html'),
     protocol: 'file:',
-    slashes: true
-  }))
+    slashes: true,
+  }));
 
   // Open the DevTools.
   if (DEV_MODE) {
+<<<<<<< HEAD
     mainWindow.webContents.openDevTools()
+=======
+    mainWindow.webContents.openDevTools();
+>>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
   }
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+<<<<<<< HEAD
   })
+=======
+  });
+>>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
 }
 
 // This method will be called when Electron has finished
@@ -49,7 +61,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -57,7 +69,7 @@ app.on('window-all-closed', function () {
   }
 });
 
-app.on('activate', function () {
+app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {

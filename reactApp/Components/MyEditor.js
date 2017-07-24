@@ -18,7 +18,8 @@ class MyEditor extends React.Component {
       editorState: EditorState.createEmpty(),
       Bold: 'BOLD',
       Italic: 'ITALIC',
-      Underline: 'UNDERLINE'
+      Underline: 'UNDERLINE',
+
     };
     this.onChange = (editorState) => this.setState({
       editorState

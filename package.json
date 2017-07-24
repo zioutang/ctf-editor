@@ -18,6 +18,7 @@
   "author": "Jeffrey Chen, Brian Fakhoury, Jay Tang",
   "license": "MIT",
   "devDependencies": {
+    "draft-js": "^0.10.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^6.1.0",
     "babel-loader": "^7.1.1",
@@ -36,6 +37,7 @@
     "webpack-dev-server": "^2.6.0"
   },
   "dependencies": {
+    "draft-js": "^0.10.1",
     "express": "^4.15.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"

@@ -1,5 +1,7 @@
 import express from 'express';
 import passport from 'passport';
+import path from 'path';
+import bodyParser from 'body-parser';
 import models from './models';
 import routes from './routes/index';
 import auth from './routes/auth';
@@ -9,6 +11,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 
 const app = express();
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({ secret: 'Brian Fakhoury doesn\'t shower' }));
 
@@ -43,4 +51,6 @@ app.use(passport.session());
 app.use('/', auth(passport));
 app.use('/', routes);
 
-export default app;
+app.listen(3000, () => {
+  console.log('Backend server for Electron App running on port 3000!');
+});

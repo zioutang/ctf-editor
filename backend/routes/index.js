@@ -1,14 +1,10 @@
 import express from 'express';
-import passport from 'passport';
-import mongoose from 'mongoose';
+import models from '../models';
 
-const app = express();
+const router = express.Router();
+const User = models.User;
 
 // Example route
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   res.send('Hello World!');
-});
-
-app.listen(3000, () => {
-  console.log('Backend server for Electron App running on port 3000!');
 });

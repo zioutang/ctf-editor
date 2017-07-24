@@ -4,12 +4,35 @@ import models from '../models';
 const router = express.Router();
 const User = models.User;
 
-module.exports = function (passport) {
+module.exports = (passport) => {
   router.get('/', (req, res) => {
     if (req.user) {
-      console.log('There is a user');
+      res.redirect('/documents');
     } else {
-      console.log('There is no user');
+      res.redirect('/register');
     }
   });
+
+  router.get('/register', (req, res) => {
+    res.send('this is register');
+  });
+
+  router.post('register', (req, res) => new User({
+    username: req.body.username,
+    fname: req.body.fname,
+    lname: req.body.lname,
+    password: req.body.password,
+  }).save()
+    .then(() => {
+      res.redirect('/login');
+    }));
+
+  router.get('/login', (req, res) => {
+    res.render('login');
+  });
+
+  router.post('/login', passport.authenticate('local', {
+    successRedirect: '/documents',
+    failureRedirect: '/login',
+  }));
 };

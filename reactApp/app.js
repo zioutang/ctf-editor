@@ -3,6 +3,7 @@ const ReactDOM = require('react-dom');
 import {
   Editor,
   EditorState,
+  RichUtils
 }
 from 'draft-js';
 /* This can check if your electron app can communicate with your backend */

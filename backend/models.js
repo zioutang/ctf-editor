@@ -4,11 +4,19 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI);
 
 const User = mongoose.model('User', {
+  username: {
+    type: String,
+    required: true,
+  },
   fname: {
     type: String,
     required: true,
   },
   lname: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },
@@ -25,6 +33,10 @@ const Document = mongoose.model('Document', {
     type: String,
   },
   author: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },

@@ -4,14 +4,17 @@ import {
   Editor,
   EditorState,
   RichUtils,
-} from 'draft-js';
+}
+from 'draft-js';
 
 import {
   ToolBar,
-} from '../Components/EditorComponents/ToolBar';
-import {
-  TextEditor,
-} from '../Components/EditorComponents/TextEditor';
+}
+from '../Components/EditorComponents/ToolBar';
+// import {
+//   TextEditor,
+// }
+// from '../Components/EditorComponents/TextEditor';
 
 
 class DocEditor extends React.Component {
@@ -22,9 +25,10 @@ class DocEditor extends React.Component {
       Bold: 'BOLD',
       Italic: 'ITALIC',
       Underline: 'UNDERLINE',
+
     };
-    this.onChange = editorState => this.setState({
-      editorState,
+    this.onChange = (editorState) => this.setState({
+      editorState
     });
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
@@ -47,6 +51,7 @@ class DocEditor extends React.Component {
   _onUnderlineClick() {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.Underline));
   }
+
   render() {
     return (
       <div>
@@ -56,13 +61,14 @@ class DocEditor extends React.Component {
           Italic={this._onItalicClick.bind(this)}
           Underline={this._onUnderlineClick.bind(this)}
         />
-        <TextEditor editorState={this.state.editorState}
+        <Editor editorState={this.state.editorState}
           handleKeyCommand={this.handleKeyCommand}
           onChange={this.onChange}/>
       </div>
     );
   }
 }
+
 
 module.exports = {
   DocEditor,

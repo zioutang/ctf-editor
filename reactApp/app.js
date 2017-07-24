@@ -6,6 +6,7 @@ import {
   RichUtils
 }
 from 'draft-js';
+
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())
@@ -16,10 +17,10 @@ class MyEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty()
+      editorState: EditorState.createEmpty(),
     };
-    this.onChange = (editorState) => this.setState({
-      editorState
+    this.onChange = editorState => this.setState({
+      editorState,
     });
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }

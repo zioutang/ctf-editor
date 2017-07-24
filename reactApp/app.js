@@ -1,12 +1,11 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import {
   Editor,
   EditorState,
-  RichUtils
-}
-from 'draft-js';
-
+  RichUtils,
+} from 'draft-js';
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())
@@ -39,16 +38,18 @@ class MyEditor extends React.Component {
     return (
       <div>
         <button onClick={this._onBoldClick.bind(this)}>Bold</button>
-        <Editor editorState={this.state.editorState}
+        <Editor
+          editorState={this.state.editorState}
           handleKeyCommand={this.handleKeyCommand}
-          onChange={this.onChange}/>
+          onChange={this.onChange}
+        />
       </div>
     );
   }
 }
 //
 ReactDOM.render(
-  <MyEditor/>, document.getElementById('root'));
+  <MyEditor />, document.getElementById('root'));
 //
 // ReactDOM.render(
 //   <p>React lives!</p>, document.getElementById('root'));

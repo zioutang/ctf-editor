@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
-  MyEditor,
-}
-from './Containers/Editor';
+  DocEditor,
+} from './Containers/Editor';
 
 
 // fetch('http://localhost:3000')
@@ -15,4 +14,4 @@ from './Containers/Editor';
 //   })
 
 ReactDOM.render(
-  <MyEditor />, document.getElementById('root'));
+  <Editor />, document.getElementById('root'));

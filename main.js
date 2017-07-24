@@ -1,11 +1,11 @@
-const electron = require('electron');
+import electron from 'electron';
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require('path');
-const url = require('url');
+import path from 'path';
+import url from 'url';
 
 const DEV_MODE = process.argv.includes('--dev');
 
@@ -15,11 +15,12 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
+
+
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
   });
-
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'build', DEV_MODE ?
@@ -31,6 +32,7 @@ function createWindow() {
 
   // Open the DevTools.
   if (DEV_MODE) {
+
     mainWindow.webContents.openDevTools();
   }
 
@@ -40,6 +42,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+
   });
 }
 

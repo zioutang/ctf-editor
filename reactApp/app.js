@@ -9,7 +9,7 @@ from 'draft-js';
 import {
   MyEditor
 }
-from './MyEditor.js';
+from './Components/MyEditor.js';
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())

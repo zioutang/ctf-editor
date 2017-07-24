@@ -1,11 +1,11 @@
-import electron from 'electron';
+const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
-import path from 'path';
-import url from 'url';
+const path = require('path');
+const url = require('url');
 
 const DEV_MODE = process.argv.includes('--dev');
 

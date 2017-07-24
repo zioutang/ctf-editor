@@ -15,14 +15,10 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-<<<<<<< HEAD
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
   });
-=======
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
->>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -35,11 +31,7 @@ function createWindow() {
 
   // Open the DevTools.
   if (DEV_MODE) {
-<<<<<<< HEAD
-    mainWindow.webContents.openDevTools()
-=======
     mainWindow.webContents.openDevTools();
->>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
   }
 
   // Emitted when the window is closed.
@@ -48,11 +40,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
-<<<<<<< HEAD
-  })
-=======
   });
->>>>>>> e0eaeda66f0a53fd48fa5f1e7fee7d6a22f2da64
 }
 
 // This method will be called when Electron has finished

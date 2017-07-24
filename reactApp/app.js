@@ -1,12 +1,11 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import {
   Editor,
   EditorState,
   RichUtils,
-}
-  from 'draft-js';
+} from 'draft-js';
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())

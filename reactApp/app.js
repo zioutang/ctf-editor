@@ -4,12 +4,10 @@ import {
   Editor,
   EditorState,
   RichUtils
-}
-from 'draft-js';
+} from 'draft-js';
 import {
-  MyEditor
-}
-from './MyEditor.js';
+  MyEditor,
+} from './Components/MyEditor';
 /* This can check if your electron app can communicate with your backend */
 // fetch('http://localhost:3000')
 // .then(resp => resp.text())
@@ -19,4 +17,4 @@ from './MyEditor.js';
 
 //
 ReactDOM.render(
-  <MyEditor />, document.getElementById('root'));
+  <MyEditor />, document.getElementById('root'));;

@@ -1,10 +1,14 @@
 import express from 'express';
-import models from '../models';
+// import models from '../models';
 
 const router = express.Router();
-const User = models.User;
+// const User = models.User;
 
 // Example route
-router.get('/', (req, res) => {
-  res.send('Hello World!');
+router.get('/documents', (req, res) => {
+  if (!req.user) {
+    res.redirect('/login');
+  } else {
+    res.render('documents');
+  }
 });

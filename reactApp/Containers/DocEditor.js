@@ -22,10 +22,6 @@ class DocEditor extends React.Component {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      Bold: 'BOLD',
-      Italic: 'ITALIC',
-      Underline: 'UNDERLINE',
-
     };
     this.onChange = (editorState) => this.setState({
       editorState
@@ -42,24 +38,17 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
-  _onBoldClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.Bold));
-  }
-  _onItalicClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.Italic));
-  }
-  _onUnderlineClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.Underline));
+
+  _onClick(stlye) {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, stlye));
   }
 
   render() {
+
     return (
       <div>
-        {/* <button onClick={this._onBoldClick.bind(this)}>Bold</button> */}
         <ToolBar
-          Bold={this._onBoldClick.bind(this)}
-          Italic={this._onItalicClick.bind(this)}
-          Underline={this._onUnderlineClick.bind(this)}
+          Click={this._onClick.bind(this)}
         />
         <Editor editorState={this.state.editorState}
           handleKeyCommand={this.handleKeyCommand}

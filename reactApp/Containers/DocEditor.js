@@ -3,29 +3,29 @@ import React from 'react';
 import {
   Editor,
   EditorState,
-  RichUtils,
+  RichUtils
 }
 from 'draft-js';
 
 import {
-  ToolBar,
+  ToolBar
 }
 from '../Components/EditorComponents/ToolBar';
 
+import AppBar from 'material-ui/AppBar';
 
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createEmpty()
     };
-    this.onChange = (editorState) => this.setState({
+    this.onChange = editorState => this.setState({
       editorState
     });
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
   }
 
-  handleKeyCommand(command) {
+  handleKeyCommand(command) { // // key command
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
     if (newState) {
       this.onChange(newState);
@@ -34,27 +34,36 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
+  _onClick(style) {
+    // e.preventDefault();
+    // this.refs.editor.focus();
+    this.setState({
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
+    });
 
-  _onClick(stlye) {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, stlye));
+    // this.onChange();
   }
 
   render() {
-
     return (
       <div>
-        <ToolBar
-          Click={this._onClick.bind(this)}
-        />
-        <Editor editorState={this.state.editorState}
-          handleKeyCommand={this.handleKeyCommand}
+        <div>
+          <AppBar title="CTF_Documents"/>
+        </div>
+        <div className="toolbar">
+          <ToolBar
+            Click={this._onClick.bind(this)}/>
+        </div>
+        <Editor
+          // ref="editor"
+          editorState={this.state.editorState}
+          handleKeyCommand={this.handleKeyCommand.bind(this)}
           onChange={this.onChange}/>
       </div>
     );
   }
 }
 
-
 module.exports = {
-  DocEditor,
+  DocEditor
 };

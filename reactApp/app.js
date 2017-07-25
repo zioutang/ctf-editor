@@ -5,6 +5,10 @@ import {
   DocEditor,
 }
 from './Containers/DocEditor';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+injectTapEventPlugin();
 
 require('./css/style.css'); // loading css file as needed
 
@@ -16,4 +20,7 @@ require('./css/style.css'); // loading css file as needed
 //   })
 
 ReactDOM.render(
-  <DocEditor/>, document.getElementById('root'));
+  <MuiThemeProvider>
+  <DocEditor />
+  </MuiThemeProvider>,
+  document.getElementById('root'));

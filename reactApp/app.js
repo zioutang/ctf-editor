@@ -6,6 +6,7 @@ import {
 }
 from './Containers/DocEditor';
 
+require('./css/style.css'); // loading css file as needed
 
 // fetch('http://localhost:3000')
 //   .then(resp => resp.text())
@@ -15,4 +16,4 @@ from './Containers/DocEditor';
 //   })
 
 ReactDOM.render(
-  <DocEditor />, document.getElementById('root'));
+  <DocEditor/>, document.getElementById('root'));

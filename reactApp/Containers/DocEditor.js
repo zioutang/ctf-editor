@@ -11,10 +11,6 @@ import {
   ToolBar,
 }
 from '../Components/EditorComponents/ToolBar';
-// import {
-//   TextEditor,
-// }
-// from '../Components/EditorComponents/TextEditor';
 
 
 class DocEditor extends React.Component {

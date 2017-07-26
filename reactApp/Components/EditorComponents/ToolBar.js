@@ -26,6 +26,7 @@ class ToolBar extends React.Component {
   handleFormat(styleInput, block) {
     // console.log(Array.isArray(this.state.style));
     // console.log(this.state.style);
+    // console.log(currentInlineStyle);
     if (!block) {
       if (this.state.style.indexOf(styleInput) === -1) {
         let list = this.state.style.concat([styleInput]);

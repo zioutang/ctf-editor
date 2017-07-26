@@ -46,8 +46,6 @@ class DocEditor extends React.Component {
   }
 
   onClick(...args) {
-    // console.log(this.state.editorState);
-
     if (!args[1]) {
       this.setState({
         editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0]),
@@ -112,6 +110,7 @@ class DocEditor extends React.Component {
             colorHandle={this.formatColor}
             sizeIncrease={this.increaseSize}
             sizeDecrease={this.decreaseSize}
+            currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
           />
         </div>
         <div className="editor">
@@ -120,7 +119,7 @@ class DocEditor extends React.Component {
             blockRenderMap={blockTypes}
             customStyleMap={this.state.customStyleMap}
             editorState={this.state.editorState}
-            handleKeyCommand={this.handleKeyCommand.bind(this)}
+            handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}/>
         </div>
         </div>

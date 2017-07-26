@@ -1,33 +1,42 @@
 import React from 'react';
+import AppBar from 'material-ui/AppBar';
 
 import {
   Editor,
   EditorState,
-  RichUtils
-}
-from 'draft-js';
+  RichUtils,
+} from 'draft-js';
 
-import {
-  ToolBar
-}
-from '../Components/EditorComponents/ToolBar';
-
-import AppBar from 'material-ui/AppBar';
-
+import { ToolBar } from '../Components/EditorComponents/ToolBar';
 
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.onClick = this.onClick.bind(this);
+    this.formatColor = this.formatColor.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.state = {
       editorState: EditorState.createEmpty(),
-      customStyleMap: {}
+      customStyleMap: {},
     };
     this.onChange = editorState => this.setState({
-      editorState
+      editorState,
     });
   }
 
-  handleKeyCommand(command) { // // key command
+  onClick(...args) {
+    if (!args[1]) {
+      this.setState({
+        editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0]),
+      });
+    } else {
+      this.setState({
+        editorState: RichUtils.toggleBlockType(this.state.editorState, args[0]),
+      });
+    }
+  }
+
+  handleKeyCommand(command) {
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
     if (newState) {
       this.onChange(newState);
@@ -36,20 +45,6 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
-  _onClick() {
-    var args = Array.prototype.slice.call(arguments);
-    console.log(args);
-    console.log(args[1]);
-    if (!args[1]) {
-      this.setState({
-        editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0])
-      });
-    } else {
-      this.setState({
-        editorState: RichUtils.toggleBlockType(this.state.editorState, args[0])
-      });
-    }
-  }
   formatColor(color) {
     console.log(color);
     const map = {
@@ -58,39 +53,36 @@ class DocEditor extends React.Component {
       },
     };
 
-    var key = Object.keys(map)[0];
-    console.log(key);
-    console.log(map[key]);
+    const key = Object.keys(map)[0];
     this.setState({
       customStyleMap: map,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, key)
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, key),
     });
-    console.log(this.state.customStyleMap);
   }
 
   render() {
     return (
       <div>
         <div>
-          <AppBar title="CTF_Documents"/>
+          <AppBar title="CTF_Documents" />
         </div>
         <div className="toolbar">
           <ToolBar
-            Click={this._onClick.bind(this)}
-            colorHandle={this.formatColor.bind(this)}
+            Click={this.onClick()}
+            colorHandle={this.formatColor()}
           />
         </div>
         <Editor
-          // ref="editor"
           customStyleMap={this.state.customStyleMap}
           editorState={this.state.editorState}
-          handleKeyCommand={this.handleKeyCommand.bind(this)}
-          onChange={this.onChange}/>
+          handleKeyCommand={this.handleKeyCommand()}
+          onChange={this.onChange}
+        />
       </div>
     );
   }
 }
 
 module.exports = {
-  DocEditor
+  DocEditor,
 };

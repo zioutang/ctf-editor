@@ -58,6 +58,7 @@ class DocEditor extends React.Component {
   }
 
   onClick(...args) {
+    console.log(this.state.editorState.getCurrentInlineStyle());
     if (!args[1]) {
       this.setState({
         editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0]),

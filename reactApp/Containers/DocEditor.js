@@ -14,11 +14,13 @@ from '../Components/EditorComponents/ToolBar';
 
 import AppBar from 'material-ui/AppBar';
 
+
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty()
+      editorState: EditorState.createEmpty(),
+      customStyleMap: {}
     };
     this.onChange = editorState => this.setState({
       editorState
@@ -35,13 +37,26 @@ class DocEditor extends React.Component {
   }
 
   _onClick(style) {
-    // e.preventDefault();
-    // this.refs.editor.focus();
     this.setState({
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
     });
+  }
+  formatColor(color) {
+    console.log(color);
+    const map = {
+      [color.hex]: {
+        color: color.hex,
+      },
+    };
 
-    // this.onChange();
+    var key = Object.keys(map)[0];
+    console.log(key);
+    console.log(map[key]);
+    this.setState({
+      customStyleMap: map,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, key)
+    });
+    console.log(this.state.customStyleMap);
   }
 
   render() {
@@ -52,10 +67,13 @@ class DocEditor extends React.Component {
         </div>
         <div className="toolbar">
           <ToolBar
-            Click={this._onClick.bind(this)}/>
+            Click={this._onClick.bind(this)}
+            colorHandle={this.formatColor.bind(this)}
+          />
         </div>
         <Editor
           // ref="editor"
+          customStyleMap={this.state.customStyleMap}
           editorState={this.state.editorState}
           handleKeyCommand={this.handleKeyCommand.bind(this)}
           onChange={this.onChange}/>

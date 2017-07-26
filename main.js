@@ -20,6 +20,7 @@ function createWindow() {
     height: 600,
     frame: true,
     titleBarStyle: 'hidden',
+    // transparent: true,
   });
 
   // and load the index.html of the app.

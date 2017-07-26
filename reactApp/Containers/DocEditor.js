@@ -5,29 +5,26 @@ import {
   Editor,
   EditorState,
   RichUtils,
-  DefaultDraftBlockRenderMap
-}
-from 'draft-js';
+  DefaultDraftBlockRenderMap,
+} from 'draft-js';
 
-import {
-  ToolBar
-}
-from '../Components/EditorComponents/ToolBar';
+import { Map } from 'immutable';
 
-import {
-  Map
-} from 'immutable';
+
+import { ToolBar } from '../Components/EditorComponents/ToolBar';
+
+
 const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
-    wrapper: <div className="center-align"/>
+    wrapper: <div className="center-align" />,
   },
   left: {
-    wrapper: <div className="left-align"/>
+    wrapper: <div className="left-align" />,
   },
   right: {
-    wrapper: <div className="right-align"/>
-  }
-}))
+    wrapper: <div className="right-align" />,
+  },
+}));
 
 
 class DocEditor extends React.Component {
@@ -44,17 +41,8 @@ class DocEditor extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
-      currentFontSize: 7
+      currentFontSize: 7,
     };
-  }
-
-  handleKeyCommand(command) { // // key command
-    const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return 'handled';
-    }
-    return 'not-handled';
   }
 
   onClick(...args) {
@@ -70,7 +58,7 @@ class DocEditor extends React.Component {
     }
   }
 
-  handleKeyCommand(command) {
+  handleKeyCommand(command) { // // key command
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
     if (newState) {
       this.onChange(newState);
@@ -80,8 +68,7 @@ class DocEditor extends React.Component {
   }
 
   formatColor(color) {
-    console.log(color);
-    let map = {
+    const map = {
       [color.hex]: {
         color: color.hex,
       },
@@ -92,32 +79,26 @@ class DocEditor extends React.Component {
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, key),
     });
   }
+
   increaseSize() {
     const newSize = this.state.currentFontSize + 1;
-    let size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
-      },
-    };
+    const size = { [newSize]: { fontSize: `${newSize}px` } };
     this.setState({
       customStyleMap: size,
       currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
     });
   }
   decreaseSize() {
     const newSize = this.state.currentFontSize - 1;
-    let size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
-      },
-    };
+    const size = { [newSize]: { fontSize: `${newSize}px` } };
     this.setState({
       customStyleMap: size,
       currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
     });
   }
+
   render() {
     return (
       <div>

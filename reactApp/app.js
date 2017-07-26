@@ -36,7 +36,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/">
     <App />
   </BrowserRouter>,
   document.getElementById('root')

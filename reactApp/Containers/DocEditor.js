@@ -3,7 +3,8 @@ import React from 'react';
 import {
   Editor,
   EditorState,
-  RichUtils
+  RichUtils,
+  DefaultDraftBlockRenderMap
 }
 from 'draft-js';
 
@@ -13,14 +14,28 @@ import {
 from '../Components/EditorComponents/ToolBar';
 
 import AppBar from 'material-ui/AppBar';
-
+import {
+  Map
+} from 'immutable';
+const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
+  center: {
+    wrapper: <div className="center-align"/>
+  },
+  left: {
+    wrapper: <div className="left-align"/>
+  },
+  right: {
+    wrapper: <div className="right-align"/>
+  }
+}))
 
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      customStyleMap: {}
+      customStyleMap: {},
+      currentFontSize: 7
     };
     this.onChange = editorState => this.setState({
       editorState
@@ -36,10 +51,9 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
-  _onClick() {
-    var args = Array.prototype.slice.call(arguments);
-    console.log(args);
-    console.log(args[1]);
+  _onClick(...args) {
+    console.log(this.state.editorState);
+
     if (!args[1]) {
       this.setState({
         editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0])
@@ -52,12 +66,11 @@ class DocEditor extends React.Component {
   }
   formatColor(color) {
     console.log(color);
-    const map = {
+    let map = {
       [color.hex]: {
         color: color.hex,
       },
     };
-
     var key = Object.keys(map)[0];
     console.log(key);
     console.log(map[key]);
@@ -67,7 +80,32 @@ class DocEditor extends React.Component {
     });
     console.log(this.state.customStyleMap);
   }
-
+  increaseSize() {
+    var newSize = this.state.currentFontSize + 1;
+    let size = {
+      [newSize]: {
+        fontSize: `${newSize}px`
+      },
+    };
+    this.setState({
+      customStyleMap: size,
+      currentFontSize: newSize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
+    });
+  }
+  decreaseSize() {
+    var newSize = this.state.currentFontSize - 1;
+    let size = {
+      [newSize]: {
+        fontSize: `${newSize}px`
+      },
+    };
+    this.setState({
+      customStyleMap: size,
+      currentFontSize: newSize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
+    });
+  }
   render() {
     return (
       <div>
@@ -78,14 +116,20 @@ class DocEditor extends React.Component {
           <ToolBar
             Click={this._onClick.bind(this)}
             colorHandle={this.formatColor.bind(this)}
+            sizeIncrease={this.increaseSize.bind(this)}
+            sizeDecrease={this.decreaseSize.bind(this)}
           />
         </div>
-        <Editor
-          // ref="editor"
-          customStyleMap={this.state.customStyleMap}
-          editorState={this.state.editorState}
-          handleKeyCommand={this.handleKeyCommand.bind(this)}
-          onChange={this.onChange}/>
+        <div className="editor">
+          <Editor
+            // ref="editor"
+            blockRenderMap={blockTypes}
+            customStyleMap={this.state.customStyleMap}
+            editorState={this.state.editorState}
+            handleKeyCommand={this.handleKeyCommand.bind(this)}
+            onChange={this.onChange}/>
+        </div>
+
       </div>
     );
   }

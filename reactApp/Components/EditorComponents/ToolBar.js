@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import {
   Editor,
   EditorState,
-  RichUtils,
-  DefaultDraftBlockRenderMap
+  RichUtils
 }
 from 'draft-js';
 import * as colors from 'material-ui/styles/colors';
@@ -24,13 +23,30 @@ class ToolBar extends React.Component {
 
   }
 
-  handleFormat(style, block) {
-    // console.log(style);
-    console.log(block);
-    this.props.Click(style, block);
+  handleFormat(styleInput, block) {
+    // console.log(Array.isArray(this.state.style));
+    // console.log(this.state.style);
+    if (!block) {
+      if (this.state.style.indexOf(styleInput) === -1) {
+        let list = this.state.style.concat([styleInput]);
+        this.setState({
+          style: list
+        })
+      } else {
+        let index = this.state.style.indexOf(styleInput);
+        console.log(this.state.style);
+        let copy = this.state.style.slice();
+        copy.splice(index, 1);
+
+        this.setState({
+          style: copy
+        })
+        console.log(this.state.style);
+      }
+    }
+    this.props.Click(styleInput, block);
   }
   colorForm(color) {
-    console.log(color);
     this.props.colorHandle(color);
   }
 
@@ -52,11 +68,12 @@ class ToolBar extends React.Component {
     style,
     block
   }) {
-    console.log(block);
+    // console.log(style);
     return (
       <RaisedButton
         backgroundColor={
-          colors.blue100
+          this.state.style.indexOf(style) === -1 ?
+           colors.blue100  : colors.blue300
         }
         icon={<FontIcon className="material-icons">{icon}</FontIcon>}
         onClick={this.handleFormat.bind(this, style, block)}
@@ -89,7 +106,36 @@ class ToolBar extends React.Component {
 
     )
   }
+  increaseSize() {
+    this.props.sizeIncrease();
+  }
+  decreaseSize() {
+    this.props.sizeDecrease();
+  }
 
+  increaseSizeButton() {
+    return (
+      <RaisedButton
+        backgroundColor={
+          colors.blue100
+        }
+        icon={<FontIcon className="material-icons">zoom_in</FontIcon>}
+        onClick={this.increaseSize.bind(this)}
+      />
+    )
+  }
+
+  decreaseSizeButton() {
+    return (
+      <RaisedButton
+        backgroundColor={
+          colors.blue100
+        }
+        icon={<FontIcon className="material-icons">zoom_out</FontIcon>}
+        onClick={this.decreaseSize.bind(this)}
+      />
+    )
+  }
   render() {
     return (
       <div>
@@ -98,6 +144,11 @@ class ToolBar extends React.Component {
         {this.formatButton({icon: 'format_underline', style: 'UNDERLINE'})}
         {this.formatButton({icon: 'format_list_numbered', style: 'ordered-list-item', block:true})}
         {this.formatButton({icon: 'format_list_bulleted', style: 'unordered-list-item', block:true})}
+        {this.formatButton({icon: 'format_align_left', style: 'left', block:true})}
+        {this.formatButton({icon: 'format_align_center', style: 'center', block:true})}
+        {this.formatButton({icon: 'format_align_right', style: 'right', block:true})}
+        {this.increaseSizeButton()}
+        {this.decreaseSizeButton()}
         {this.colorPickerButton()}
       </div>
     );

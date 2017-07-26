@@ -21,7 +21,7 @@ class Container extends React.Component {
               <Route path="/" exact component={DocEditor}/>
               </Switch>
           </div>
-    </HashRouter>
+      </HashRouter>
     )
   }
 }

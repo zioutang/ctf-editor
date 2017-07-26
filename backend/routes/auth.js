@@ -1,5 +1,5 @@
-import express from 'express';
-import models from '../models';
+const express = require('express');
+const models = require('../models');
 
 const router = express.Router();
 const User = models.User;
@@ -14,7 +14,7 @@ module.exports = (passport) => {
   });
 
   router.get('/register', (req, res) => {
-    res.send('this is register');
+    res.send({ page: 'register', value: true });
   });
 
   router.post('register', (req, res) => new User({
@@ -28,11 +28,14 @@ module.exports = (passport) => {
     }));
 
   router.get('/login', (req, res) => {
-    res.render('login');
+    // res.render('login');
+    res.send({ page: 'login', value: true });
   });
 
   router.post('/login', passport.authenticate('local', {
     successRedirect: '/documents',
     failureRedirect: '/login',
   }));
+
+  return router;
 };

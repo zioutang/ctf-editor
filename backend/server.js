@@ -1,10 +1,10 @@
-import express from 'express';
-import passport from 'passport';
-import path from 'path';
-import bodyParser from 'body-parser';
-import models from './models';
-import routes from './routes/index';
-import auth from './routes/auth';
+const express = require('express');
+const passport = require('passport');
+// const path = require('path');
+const bodyParser = require('body-parser');
+const models = require('./models');
+const routes = require('./routes/index');
+const auth = require('./routes/auth');
 
 const User = models.User;
 const LocalStrategy = require('passport-local').Strategy;
@@ -12,8 +12,8 @@ const session = require('express-session');
 
 const app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'hbs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,3 +54,5 @@ app.use('/', routes);
 app.listen(3000, () => {
   console.log('Backend server for Electron App running on port 3000!');
 });
+
+module.exports = app;

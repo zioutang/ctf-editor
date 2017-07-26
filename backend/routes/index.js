@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 // import models from '../models';
 
 const router = express.Router();
@@ -9,6 +9,8 @@ router.get('/documents', (req, res) => {
   if (!req.user) {
     res.redirect('/login');
   } else {
-    res.render('documents');
+    res.send({ page: 'documents', value: true });
   }
 });
+
+module.exports = router;

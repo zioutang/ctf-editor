@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import BrowserRouter from 'react-router-dom';
 import App from './components/App';
 
 class App extends React.Component {
@@ -36,7 +36,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <BrowserRouter basename="/">
+  <BrowserRouter>
     <App />
   </BrowserRouter>,
   document.getElementById('root')

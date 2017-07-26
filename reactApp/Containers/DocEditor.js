@@ -33,17 +33,19 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
-    // this.onClick = this.onClick.bind(this);
-    // this.formatColor = this.formatColor.bind(this);
-    // this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.onClick = this.onClick.bind(this);
+    this.formatColor = this.formatColor.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.increaseSize = this.increaseSize.bind(this);
+    this.decreaseSize = this.decreaseSize.bind(this);
+    this.onChange = editorState => this.setState({
+      editorState,
+    });
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
       currentFontSize: 7
     };
-    this.onChange = editorState => this.setState({
-      editorState,
-    });
   }
 
   handleKeyCommand(command) { // // key command
@@ -55,7 +57,7 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
-  _onClick(...args) {
+  onClick(...args) {
     // console.log(this.state.editorState);
 
     if (!args[1]) {
@@ -125,10 +127,10 @@ class DocEditor extends React.Component {
         </div>
         <div className="toolbar">
           <ToolBar
-            Click={this._onClick.bind(this)}
-            colorHandle={this.formatColor.bind(this)}
-            sizeIncrease={this.increaseSize.bind(this)}
-            sizeDecrease={this.decreaseSize.bind(this)}
+            Click={this.onClick}
+            colorHandle={this.formatColor}
+            sizeIncrease={this.increaseSize}
+            sizeDecrease={this.decreaseSize}
           />
         </div>
         <div className="editor">

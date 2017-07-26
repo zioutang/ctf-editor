@@ -18,6 +18,9 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
+    titleBarStyle: 'customButtonsOnHover',
+    // transparent: true,
   });
 
   // and load the index.html of the app.

@@ -18,7 +18,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(session({ secret: 'Brian Fakhoury doesn\'t shower' }));
+app.use(session({ secret: 'Jeff doesn\'t shower' }));
 
 passport.serializeUser((user, done) => {
   done(null, user._id);

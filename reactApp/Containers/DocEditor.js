@@ -5,7 +5,6 @@ import {
   Editor,
   EditorState,
   RichUtils,
-
   DefaultDraftBlockRenderMap
 }
 from 'draft-js';
@@ -15,7 +14,6 @@ import {
 }
 from '../Components/EditorComponents/ToolBar';
 
-import AppBar from 'material-ui/AppBar';
 import {
   Map
 } from 'immutable';
@@ -30,24 +28,18 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
     wrapper: <div className="right-align"/>
   }
 }))
-}
-from 'draft-js';
 
-import {
-  ToolBar
-} from '../Components/EditorComponents/ToolBar';
+
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
-    this.formatColor = this.formatColor.bind(this);
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    // this.onClick = this.onClick.bind(this);
+    // this.formatColor = this.formatColor.bind(this);
+    // this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
-
       currentFontSize: 7
-
     };
     this.onChange = editorState => this.setState({
       editorState,
@@ -64,7 +56,7 @@ class DocEditor extends React.Component {
   }
 
   _onClick(...args) {
-    console.log(this.state.editorState);
+    // console.log(this.state.editorState);
 
     if (!args[1]) {
       this.setState({
@@ -93,8 +85,6 @@ class DocEditor extends React.Component {
         color: color.hex,
       },
     };
-
-
     const key = Object.keys(map)[0];
     this.setState({
       customStyleMap: map,
@@ -135,7 +125,6 @@ class DocEditor extends React.Component {
         </div>
         <div className="toolbar">
           <ToolBar
-<<<<<<< HEAD
             Click={this._onClick.bind(this)}
             colorHandle={this.formatColor.bind(this)}
             sizeIncrease={this.increaseSize.bind(this)}
@@ -151,27 +140,7 @@ class DocEditor extends React.Component {
             handleKeyCommand={this.handleKeyCommand.bind(this)}
             onChange={this.onChange}/>
         </div>
-
-=======
-            Click={this.onClick()}
-            colorHandle={this.formatColor()}
-          />
-        </div> <
-      Editor customStyleMap = {
-        this.state.customStyleMap
-      }
-      editorState = {
-        this.state.editorState
-      }
-      handleKeyCommand = {
-        this.handleKeyCommand()
-      }
-      onChange = {
-        this.onChange
-      }
-      /> >>> >>> >
-      4 b9b671e4f63509ccb28683558042384d4a9f253 <
-      /div>
+        </div>
     );
   }
 }

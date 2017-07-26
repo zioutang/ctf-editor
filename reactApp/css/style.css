@@ -29,3 +29,8 @@ h1 {
 .right-align {
   text-align: right;
 }
+
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}

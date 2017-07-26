@@ -34,3 +34,11 @@ h1 {
   -webkit-user-select: none;
   -webkit-app-region: drag;
 }
+
+html {
+  -webkit-app-region: drag;
+}
+
+button {
+  -webkit-app-region: no-drag;
+}

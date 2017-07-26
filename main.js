@@ -18,8 +18,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    frame: true,
-    titleBarStyle: 'hidden',
+    frame: false,
+    titleBarStyle: 'customButtonsOnHover',
     // transparent: true,
   });
 

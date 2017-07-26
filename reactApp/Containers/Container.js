@@ -13,7 +13,7 @@ const Container = () => (
   <HashRouter>
     <div>
       <Switch>
-        <Route path="/" exact component={DocEditor} />
+        <Route exact path="/" component={DocEditor} />
       </Switch>
     </div>
   </HashRouter>

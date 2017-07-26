@@ -102,7 +102,7 @@ class DocEditor extends React.Component {
     return (
       <div>
         <div>
-          <AppBar title="CTF_Documents" />
+          <AppBar title="CTF_Documents" className="top-bar-drag" />
         </div>
         <div className="toolbar">
           <ToolBar

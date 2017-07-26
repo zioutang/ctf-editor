@@ -8,13 +8,6 @@ import { Container } from './Containers/Container';
 
 injectTapEventPlugin();
 
-// fetch('http://localhost:3000')
-//   .then(resp => resp.text())
-//   .then(text => console.log(text))
-//   .catch(err => {
-//     throw err
-//   })
-
 ReactDOM.render(
   <MuiThemeProvider>
     <Container />

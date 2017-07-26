@@ -115,14 +115,14 @@ class DocEditor extends React.Component {
         </div>
         <div className="editor">
           <Editor
-            // ref="editor"
             blockRenderMap={blockTypes}
             customStyleMap={this.state.customStyleMap}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}/>
+            onChange={this.onChange}
+          />
         </div>
-        </div>
+      </div>
     );
   }
 }

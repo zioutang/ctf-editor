@@ -5,37 +5,10 @@ import {
   Editor,
   EditorState,
   RichUtils,
+} from 'draft-js';
 
-  DefaultDraftBlockRenderMap
-}
-from 'draft-js';
+import { ToolBar } from '../Components/EditorComponents/ToolBar';
 
-import {
-  ToolBar
-}
-from '../Components/EditorComponents/ToolBar';
-
-import AppBar from 'material-ui/AppBar';
-import {
-  Map
-} from 'immutable';
-const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
-  center: {
-    wrapper: <div className="center-align"/>
-  },
-  left: {
-    wrapper: <div className="left-align"/>
-  },
-  right: {
-    wrapper: <div className="right-align"/>
-  }
-}))
-}
-from 'draft-js';
-
-import {
-  ToolBar
-} from '../Components/EditorComponents/ToolBar';
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -45,27 +18,13 @@ class DocEditor extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
-
-      currentFontSize: 7
-
     };
     this.onChange = editorState => this.setState({
       editorState,
     });
   }
 
-  handleKeyCommand(command) { // // key command
-    const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return 'handled';
-    }
-    return 'not-handled';
-  }
-
-  _onClick(...args) {
-    console.log(this.state.editorState);
-
+  onClick(...args) {
     if (!args[1]) {
       this.setState({
         editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0]),
@@ -88,12 +47,11 @@ class DocEditor extends React.Component {
 
   formatColor(color) {
     console.log(color);
-    let map = {
+    const map = {
       [color.hex]: {
         color: color.hex,
       },
     };
-
 
     const key = Object.keys(map)[0];
     this.setState({
@@ -101,32 +59,7 @@ class DocEditor extends React.Component {
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, key),
     });
   }
-  increaseSize() {
-    var newSize = this.state.currentFontSize + 1;
-    let size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
-      },
-    };
-    this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
-    });
-  }
-  decreaseSize() {
-    var newSize = this.state.currentFontSize - 1;
-    let size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
-      },
-    };
-    this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize))
-    });
-  }
+
   render() {
     return (
       <div>
@@ -135,43 +68,17 @@ class DocEditor extends React.Component {
         </div>
         <div className="toolbar">
           <ToolBar
-<<<<<<< HEAD
-            Click={this._onClick.bind(this)}
-            colorHandle={this.formatColor.bind(this)}
-            sizeIncrease={this.increaseSize.bind(this)}
-            sizeDecrease={this.decreaseSize.bind(this)}
-          />
-        </div>
-        <div className="editor">
-          <Editor
-            // ref="editor"
-            blockRenderMap={blockTypes}
-            customStyleMap={this.state.customStyleMap}
-            editorState={this.state.editorState}
-            handleKeyCommand={this.handleKeyCommand.bind(this)}
-            onChange={this.onChange}/>
-        </div>
-
-=======
             Click={this.onClick()}
             colorHandle={this.formatColor()}
           />
-        </div> <
-      Editor customStyleMap = {
-        this.state.customStyleMap
-      }
-      editorState = {
-        this.state.editorState
-      }
-      handleKeyCommand = {
-        this.handleKeyCommand()
-      }
-      onChange = {
-        this.onChange
-      }
-      /> >>> >>> >
-      4 b9b671e4f63509ccb28683558042384d4a9f253 <
-      /div>
+        </div>
+        <Editor
+          customStyleMap={this.state.customStyleMap}
+          editorState={this.state.editorState}
+          handleKeyCommand={this.handleKeyCommand()}
+          onChange={this.onChange}
+        />
+      </div>
     );
   }
 }

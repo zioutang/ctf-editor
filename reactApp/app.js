@@ -4,11 +4,9 @@ import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-injectTapEventPlugin();
+import { Container } from './Containers/Container';
 
-import {
-  Container
-} from './Container'
+injectTapEventPlugin();
 
 require('./css/style.css'); // loading css file as needed
 
@@ -21,6 +19,6 @@ require('./css/style.css'); // loading css file as needed
 
 ReactDOM.render(
   <MuiThemeProvider>
-  <Container />
+    <Container />
   </MuiThemeProvider>,
   document.getElementById('root'));

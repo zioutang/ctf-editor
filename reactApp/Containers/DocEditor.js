@@ -36,10 +36,19 @@ class DocEditor extends React.Component {
     return 'not-handled';
   }
 
-  _onClick(style) {
-    this.setState({
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
-    });
+  _onClick() {
+    var args = Array.prototype.slice.call(arguments);
+    console.log(args);
+    console.log(args[1]);
+    if (!args[1]) {
+      this.setState({
+        editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0])
+      });
+    } else {
+      this.setState({
+        editorState: RichUtils.toggleBlockType(this.state.editorState, args[0])
+      });
+    }
   }
   formatColor(color) {
     console.log(color);

@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {
-  DocEditor,
-}
-from './Containers/DocEditor';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 injectTapEventPlugin();
+
+import {
+  Container
+} from './Container'
 
 require('./css/style.css'); // loading css file as needed
 
@@ -21,6 +21,6 @@ require('./css/style.css'); // loading css file as needed
 
 ReactDOM.render(
   <MuiThemeProvider>
-  <DocEditor />
+  <Container />
   </MuiThemeProvider>,
   document.getElementById('root'));

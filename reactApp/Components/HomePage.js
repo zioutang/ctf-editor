@@ -1,5 +1,8 @@
 import React from 'react';
-import { Card, CardTitle } from 'material-ui/Card';
+import {
+  Card,
+  CardTitle
+} from 'material-ui/Card';
 
 
 const HomePage = () => (
@@ -8,4 +11,6 @@ const HomePage = () => (
   </Card>
 );
 
-export default HomePage;
+module.exports = {
+  HomePage
+};

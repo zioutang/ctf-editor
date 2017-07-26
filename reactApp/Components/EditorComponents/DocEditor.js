@@ -15,7 +15,7 @@ import {
 
 import {
   ToolBar
-} from '../Components/EditorComponents/ToolBar';
+} from './ToolBar';
 
 
 const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
@@ -115,7 +115,7 @@ class DocEditor extends React.Component {
     return (
       <div>
         <div>
-          <AppBar title="CTF_Documents" className="top-bar-drag" />
+          <AppBar title="CTF_Documents" />
         </div>
         <div className="toolbar">
           <ToolBar
@@ -128,14 +128,14 @@ class DocEditor extends React.Component {
         </div>
         <div className="editor">
           <Editor
+            // ref="editor"
             blockRenderMap={blockTypes}
             customStyleMap={this.state.customStyleMap}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
-          />
+            onChange={this.onChange}/>
         </div>
-      </div>
+        </div>
     );
   }
 }

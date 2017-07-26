@@ -7,16 +7,30 @@ import {
 } from 'react-router-dom';
 
 
-import { DocEditor } from './DocEditor';
+import {
+  DocEditor
+} from '../Components/EditorComponents/DocEditor';
+
+import {
+  LoginForm
+} from '../Components/AuthComponents/LoginForm';
+
+import {
+  HomePage
+} from '../Components/HomePage';
 
 const Container = () => (
   <HashRouter>
     <div>
       <Switch>
-        <Route exact path="/" component={DocEditor} />
+        <Route exact path="/login" component={LoginForm} />
+        <Route exact path="/doc" component={DocEditor} />
+        <Route exact path="/" component={HomePage} />
       </Switch>
     </div>
   </HashRouter>
 );
 
-module.exports = { Container };
+module.exports = {
+  Container
+};

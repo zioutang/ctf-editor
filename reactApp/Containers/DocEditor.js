@@ -8,10 +8,14 @@ import {
   DefaultDraftBlockRenderMap,
 } from 'draft-js';
 
-import { Map } from 'immutable';
+import {
+  Map
+} from 'immutable';
 
 
-import { ToolBar } from '../Components/EditorComponents/ToolBar';
+import {
+  ToolBar
+} from '../Components/EditorComponents/ToolBar';
 
 
 const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
@@ -46,7 +50,7 @@ class DocEditor extends React.Component {
   }
 
   onClick(...args) {
-    console.log(this.state.editorState.getCurrentInlineStyle());
+    // console.log(this.state.editorState.getCurrentInlineStyle().has(args[0]));
     if (!args[1]) {
       this.setState({
         editorState: RichUtils.toggleInlineStyle(this.state.editorState, args[0]),
@@ -82,7 +86,11 @@ class DocEditor extends React.Component {
 
   increaseSize() {
     const newSize = this.state.currentFontSize + 1;
-    const size = { [newSize]: { fontSize: `${newSize}px` } };
+    const size = {
+      [newSize]: {
+        fontSize: `${newSize}px`
+      }
+    };
     this.setState({
       customStyleMap: size,
       currentFontSize: newSize,
@@ -91,7 +99,11 @@ class DocEditor extends React.Component {
   }
   decreaseSize() {
     const newSize = this.state.currentFontSize - 1;
-    const size = { [newSize]: { fontSize: `${newSize}px` } };
+    const size = {
+      [newSize]: {
+        fontSize: `${newSize}px`
+      }
+    };
     this.setState({
       customStyleMap: size,
       currentFontSize: newSize,
@@ -111,7 +123,7 @@ class DocEditor extends React.Component {
             colorHandle={this.formatColor}
             sizeIncrease={this.increaseSize}
             sizeDecrease={this.decreaseSize}
-            currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
+            // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
           />
         </div>
         <div className="editor">

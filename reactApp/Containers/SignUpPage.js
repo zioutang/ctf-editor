@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import SignUpForm from '../Components/SignUpForm';
 
-
 class SignUpPage extends React.Component {
   constructor(props) {
     super(props);

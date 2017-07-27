@@ -8,13 +8,19 @@ class LoginPage extends React.Component {
       errors: {},
       user: {
         email: '',
-        name: '',
         password: '',
       },
     };
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
+  }
+
+  processForm(event) {
+    event.preventDefault();
+
+    console.log('email:', this.state.user.email);
+    console.log('password:', this.state.user.password);
   }
 
   changeUser(event) {
@@ -25,13 +31,6 @@ class LoginPage extends React.Component {
     this.setState({
       user,
     });
-  }
-
-  processForm(event) {
-    event.preventDefault();
-    console.log('name:', this.state.user.name);
-    console.log('email:', this.state.user.email);
-    console.log('password:', this.state.user.password);
   }
 
   render() {

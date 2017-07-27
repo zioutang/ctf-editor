@@ -27,7 +27,7 @@ class Login extends React.Component {
             error: 'Incorrect Username or Password'
           });
         } else {
-          this.props.history.push('/docportal');
+          this.props.history.push('/docdirect');
         }
       })
       .catch(err => {

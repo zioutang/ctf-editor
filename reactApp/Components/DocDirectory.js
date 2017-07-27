@@ -12,5 +12,9 @@ const DocDirectory = () => (
 );
 
 module.exports = {
+<<<<<<< HEAD
   DocDirectory,
+=======
+  DocDirectory
+>>>>>>> cb865d8f4d6b6c89893346117c651a7660fc549f
 };

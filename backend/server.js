@@ -148,7 +148,7 @@ app.post('/login', passport.authenticate('local'), (req, res) => {
 });
 /* END OF AUTH ROUTES */
 
-
+//
 app.get('/getuserdocuments', (req, res) => {
   req.user.populate('documents')
     .execPopulate()
@@ -199,6 +199,7 @@ app.post('/newdocument', (req, res) => {
 });
 
 app.post('/savedocument/:docId', (req, res) => {
+  console.log(req.params.docId);
   Doc.update({
       _id: req.params.docId
     }, {

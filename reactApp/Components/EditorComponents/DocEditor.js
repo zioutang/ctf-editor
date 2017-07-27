@@ -115,25 +115,25 @@ class DocEditor extends React.Component {
   }
   onChange(editorState) {
     ////////////////// be low is for selection highlight
-    const selection = editorState.getSelection();
-
-    if (this.previousHighlight) {
-      editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
-      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-      editorState = EditorState.acceptSelection(editorState, selection);
-    }
-
-    editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    this.previousHighlight = editorState.getSelection();
-    if (selection.getStartOffset() === selection.getEndOffset()) {
-      console.log('cursor', selection);
-      this.socket.emit('cursorMove', selection);
-    }
-    ///////////////////////////
-
-    const contentState = editorState.getCurrentContent(); // current content (the changing part)
-    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
-    this.socket.emit('newContent', stringifiedContent); // sending out the change
+    // const selection = editorState.getSelection();
+    //
+    // if (this.previousHighlight) {
+    //   editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+    //   editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+    //   editorState = EditorState.acceptSelection(editorState, selection);
+    // }
+    //
+    // editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+    // this.previousHighlight = editorState.getSelection();
+    // if (selection.getStartOffset() === selection.getEndOffset()) {
+    //   console.log('cursor', selection);
+    //   this.socket.emit('cursorMove', selection);
+    // }
+    // ///////////////////////////
+    //
+    // const contentState = editorState.getCurrentContent(); // current content (the changing part)
+    // const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    // this.socket.emit('newContent', stringifiedContent); // sending out the change
 
     this.setState({
       editorState,
@@ -146,6 +146,27 @@ class DocEditor extends React.Component {
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     const docId = this.props.match.params.dochash;
 
+    fetch(`http://localhost:3000/savedocument/${docId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: stringifiedContent
+        })
+      })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.success) {
+          // successful save
+        } else {
+          throw resp.error;
+        }
+      })
+      .catch(err => {
+        throw err
+      });
     /// fetch to server to save it.
     // credential : 'include'
     // header: {'Content-type': 'application/json'}
@@ -154,6 +175,35 @@ class DocEditor extends React.Component {
   ComponentDidMount() {
     // fetch to the server to get the target document
     // this.props.match.params.dochash
+    fetch(`http://localhost:3000/getdocument/${docId}`, {
+        credentials: 'include'
+      })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.success) {
+          const raw = resp.document.content;
+
+          if (raw) {
+            const contentState = convertFromRaw(JSON.parse(raw));
+            this.setState({
+              editorState: EditorState.createWithContent(contentState),
+              title: resp.document.title
+            });
+          } else {
+            this.setState({
+              title: resp.document.title
+            });
+          }
+
+        } else {
+          this.setState({
+            error: resp.error.errmsg
+          });
+        }
+      })
+      .catch(err => {
+        throw err
+      });
   }
   ComponentWillUnmount() {
     // this.socket.emit('disconnect');
@@ -221,45 +271,49 @@ class DocEditor extends React.Component {
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
     });
   }
-
   render() {
     return (
       <div>
-        {this.state.top && (
-          <div
-            style={{
-              position: 'absolute',
-              backgroundColor: 'red',
-              width: '2px',
-              height: this.state.height,
-              top: this.state.top,
-              left: this.state.left
-            }}
-            >
+        <h1>Editing your document</h1>
+          {this.state.top && (
+            <div
+              style={{
+                position: 'absolute',
+                backgroundColor: 'red',
+                width: '2px',
+                height: this.state.height,
+                top: this.state.top,
+                left: this.state.left
+              }}
+              >
+            </div>
+          )}
+          <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+          <div>
+            <AppBar title="CTF_Documents" />
           </div>
-        )}
-        <div>
-          <AppBar title="CTF_Documents" />
-        </div>
-        <div className="toolbar">
-          <ToolBar
-            Click={this.onClick}
-            colorHandle={this.formatColor}
-            sizeIncrease={this.increaseSize}
-            sizeDecrease={this.decreaseSize}
-            // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
-          />
-        </div>
-        <div className="editor">
-          <Editor
-            // ref="editor"
-            blockRenderMap={blockTypes}
-            customStyleMap={this.state.customStyleMap}
-            editorState={this.state.editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}/>
-        </div>
-        </div>
+          <div className="toolbar">
+            <ToolBar
+              Click={this.onClick}
+              colorHandle={this.formatColor}
+              sizeIncrease={this.increaseSize}
+              sizeDecrease={this.decreaseSize}
+              // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
+            />
+          </div>
+          <div className="editor">
+            <Editor
+              // ref="editor"
+              blockRenderMap={blockTypes}
+              customStyleMap={this.state.customStyleMap}
+              editorState={this.state.editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              onChange={this.onChange}/>
+          </div>
+          <div>
+          <button onClick={() => this.saveDoc()}>Save the Document</button>
+          </div>
+          </div>
     );
   }
 }

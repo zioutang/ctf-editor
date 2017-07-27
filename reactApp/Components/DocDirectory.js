@@ -13,6 +13,7 @@
 
 import React from 'react';
 import {
+<<<<<<< HEAD
   Link
 } from 'react-router-dom';
 
@@ -111,6 +112,11 @@ class DocDirectory extends React.Component {
       });
   }
 
+=======
+  Card,
+  CardTitle,
+} from 'material-ui/Card';
+>>>>>>> 5212d01588b6fb576a0b3c6b21f7015aeb1dbb8e
 
   render() {
     let newDocTitleField;
@@ -150,5 +156,5 @@ class DocDirectory extends React.Component {
 
 
 module.exports = {
-  DocDirectory
+  DocDirectory,
 };

@@ -1,11 +1,17 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
+// const io = require('socket.io')(http);
+const io = require('socket.io-client');
 
+
+import AppBar from 'material-ui/AppBar';
 import {
   Editor,
   EditorState,
   RichUtils,
   DefaultDraftBlockRenderMap,
+  convertToRaw,
+  convertFromRaw
+
 } from 'draft-js';
 
 import {
@@ -39,14 +45,119 @@ class DocEditor extends React.Component {
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     this.increaseSize = this.increaseSize.bind(this);
     this.decreaseSize = this.decreaseSize.bind(this);
-    this.onChange = editorState => this.setState({
-      editorState,
+    this.onChange = this.onChange.bind(this);
+    /////////////////
+    this.socket = io('http://localhost:3000');
+
+    this.socket.on('userJoin', () => {
+      console.log('joined');
     });
+
+    this.socket.on('back', ({
+      doc
+    }) => {
+      console.log('you just joined', doc);
+    });
+
+    this.socket.on('userLeft', () => {
+      console.log('user left');
+    });
+
+    this.socket.on('reveiveNewContent', stringifiedContent => {
+      const contentState = convertFromRaw(JSON.parse(stringifiedContent));
+      const newEditorState = EditorState.createWithContent(contentState);
+      this.setState({
+        editorState: newEditorState
+      })
+    });
+
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      // console.log('inc', incomingSelectionObj);
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState;
+      const ogSelection = editorState.getSelection();
+      const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
+      this.setState({
+        editorState: temporaryEditorState
+      }, () => {
+        const winSel = window.getSelection();
+        const range = winSel.getRangeAt(0);
+        const rects = range.getClientRects()[0];
+        console.log('range', range);
+        console.log('rects', rects);
+        const {
+          top,
+          left,
+          bottom
+        } = rects;
+        this.setState({
+          editorState: ogEditorState,
+          top,
+          left,
+          height: (bottom - top)
+        })
+      })
+
+    }); /// dealling with the cursor position
+
+    this.socket.emit('join', {
+      doc: this.props.match.params.dochash
+    }); /// event to emit the target doc
+
+    ///////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
       currentFontSize: 7,
     };
+    this.previousHighlight = null;
+  }
+  onChange(editorState) {
+    ////////////////// be low is for selection highlight
+    const selection = editorState.getSelection();
+
+    if (this.previousHighlight) {
+      editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = EditorState.acceptSelection(editorState, selection);
+    }
+
+    editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+    this.previousHighlight = editorState.getSelection();
+    if (selection.getStartOffset() === selection.getEndOffset()) {
+      console.log('cursor', selection);
+      this.socket.emit('cursorMove', selection);
+    }
+    ///////////////////////////
+
+    const contentState = editorState.getCurrentContent(); // current content (the changing part)
+    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    this.socket.emit('newContent', stringifiedContent); // sending out the change
+
+    this.setState({
+      editorState,
+    });
+
+  } /// made some change on this function
+
+  saveDoc() {
+    const contentState = this.state.editorState.getCurrentContent(); // current content (the changing part)
+    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    const docId = this.props.match.params.dochash;
+
+    /// fetch to server to save it.
+    // credential : 'include'
+    // header: {'Content-type': 'application/json'}
+    // body : JSON.stringify({content: stringifiedContent })
+  }
+  ComponentDidMount() {
+    // fetch to the server to get the target document
+    // this.props.match.params.dochash
+  }
+  ComponentWillUnmount() {
+    // this.socket.emit('disconnect');
+    this.socket.disconnect();
   }
 
   onClick(...args) {
@@ -114,6 +225,19 @@ class DocEditor extends React.Component {
   render() {
     return (
       <div>
+        {this.state.top && (
+          <div
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              width: '2px',
+              height: this.state.height,
+              top: this.state.top,
+              left: this.state.left
+            }}
+            >
+          </div>
+        )}
         <div>
           <AppBar title="CTF_Documents" />
         </div>

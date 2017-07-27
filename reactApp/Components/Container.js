@@ -7,32 +7,32 @@ import {
 
 
 import {
-  DocEditor
+  DocEditor,
 } from './EditorComponents/DocEditor';
 
 import {
-  Login
+  Login,
 } from './AuthComponents/Login';
 
 import {
-  DocDirectory
+  DocDirectory,
 } from './DocDirectory';
 
 import {
-  Register
+  Register,
 } from './AuthComponents/Register';
 
 const Container = () => (
   <div>
-      <Switch>
-        <Route exact path="/docdirect" component={DocDirectory} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/edit/:dochash" component={DocEditor} />
-        <Route exact path="/" component={Login} />
-      </Switch>
-    </div>
+    <Switch>
+      <Route exact path="/docdirect" component={DocDirectory} />
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/edit/:dochash" component={DocEditor} />
+      <Route exact path="/" component={Login} />
+    </Switch>
+  </div>
 );
 
 module.exports = {
-  Container
+  Container,
 };

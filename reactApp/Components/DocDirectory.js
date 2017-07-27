@@ -1,16 +1,16 @@
 import React from 'react';
 import {
   Card,
-  CardTitle
+  CardTitle,
 } from 'material-ui/Card';
 
 
-const HomePage = () => (
+const DocDirectory = () => (
   <Card className="container">
     <CardTitle title="React Application" subtitle="This is the home page." />
   </Card>
 );
 
 module.exports = {
-  HomePage
+  DocDirectory,
 };

@@ -320,6 +320,7 @@ class DocEditor extends React.Component {
         )}
         <div>
           <AppBar title="CTF_Documents" />
+          <p>Id: {this.props.match.params.dochash}</p>
         </div>
         <div>
           <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
@@ -343,6 +344,7 @@ class DocEditor extends React.Component {
             onChange={this.onChange}
           />
         </div>
+        <button onClick={() => this.saveDoc()}>Save the Document</button>
       </div>
     // =======
     //         <h1>Editing your document </h1>

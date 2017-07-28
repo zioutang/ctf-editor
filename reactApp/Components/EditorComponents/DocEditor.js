@@ -1,13 +1,10 @@
 import React from 'react';
-<<<<<<< HEAD
 // const io = require('socket.io')(http);
 import Paper from 'material-ui/Paper';
 
 const io = require('socket.io-client');
-=======
-import io from 'socket.io-client';
+
 import { Map } from 'immutable';
->>>>>>> f4330c7ac752c2e0388fff006c50d23c30eb2c98
 
 import AppBar from 'material-ui/AppBar';
 import {
@@ -18,21 +15,8 @@ import {
   convertToRaw,
   convertFromRaw,
 } from 'draft-js';
-<<<<<<< HEAD
 
-
-import {
-  Map,
-} from 'immutable';
-
-
-import {
-  ToolBar,
-} from './ToolBar';
-
-=======
 import { ToolBar } from './ToolBar';
->>>>>>> f4330c7ac752c2e0388fff006c50d23c30eb2c98
 
 const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
@@ -70,9 +54,9 @@ class DocEditor extends React.Component {
     this.decreaseSize = this.decreaseSize.bind(this);
     this.onChange = this.onChange.bind(this);
     this.socket = io('http://localhost:3000');
-    this.socket.on('userJoin', () => { console.log('joined'); })
+    this.socket.on('userJoin', () => { console.log('joined'); });
     this.socket.on('back', ({
-      doc
+      doc,
     }) => {
       console.log('you just joined', doc);
     });
@@ -81,23 +65,23 @@ class DocEditor extends React.Component {
       console.log('user left');
     });
 
-    this.socket.on('reveiveNewContent', stringifiedContent => {
+    this.socket.on('reveiveNewContent', (stringifiedContent) => {
       const contentState = convertFromRaw(JSON.parse(stringifiedContent));
       const newEditorState = EditorState.createWithContent(contentState);
       this.setState({
-        editorState: newEditorState
-      })
+        editorState: newEditorState,
+      });
     });
 
-    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+    this.socket.on('receiveNewCursor', (incomingSelectionObj) => {
       // console.log('inc', incomingSelectionObj);
-      let editorState = this.state.editorState;
+      const editorState = this.state.editorState;
       const ogEditorState = editorState;
       const ogSelection = editorState.getSelection();
       const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
       const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
       this.setState({
-        editorState: temporaryEditorState
+        editorState: temporaryEditorState,
       }, () => {
         const winSel = window.getSelection();
         const range = winSel.getRangeAt(0);
@@ -107,31 +91,23 @@ class DocEditor extends React.Component {
         const {
           top,
           left,
-          bottom
+          bottom,
         } = rects;
         this.setState({
           editorState: ogEditorState,
           top,
           left,
-          height: (bottom - top)
-        })
-      })
+          height: (bottom - top),
+        });
+      });
     //
-    }); /// dealling with the cursor position
+    }); // / dealling with the cursor position
     //
     this.socket.emit('join', {
-      doc: this.props.match.params.dochash
-    }); /// event to emit the target doc
+      doc: this.props.match.params.dochash,
+    }); // / event to emit the target doc
 
     // /////////////////
-<<<<<<< HEAD
-=======
-    this.state = {
-      editorState: EditorState.createEmpty(),
-      currentFontSize: 14,
-      title: 'Loading ...',
-    };
->>>>>>> f4330c7ac752c2e0388fff006c50d23c30eb2c98
     this.onClick = this.onClick.bind(this);
     this.formatColor = this.formatColor.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
@@ -140,6 +116,7 @@ class DocEditor extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.previousHighlight = null;
   }
+
   onChange(editorState) {
     // //////////////// be low is for selection highlight
     const selection = editorState.getSelection();
@@ -343,7 +320,7 @@ class DocEditor extends React.Component {
           <AppBar
             className="appbar"
             titleStyle={{ textAlign: 'center' }}
-            title={'Document Editor | ID: ' + this.props.match.params.dochash}
+            title={`Document Editor | ID: ${this.props.match.params.dochash}`}
             showMenuIconButton={false}
           />
           <div>

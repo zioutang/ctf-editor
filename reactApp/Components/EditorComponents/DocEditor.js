@@ -176,16 +176,11 @@ class DocEditor extends React.Component {
       .catch(err => {
         throw err
       });
-    /// fetch to server to save it.
-    // credential : 'include'
-    // header: {'Content-type': 'application/json'}
-    // body : JSON.stringify({content: stringifiedContent })
+
   }
 
   componentDidMount() {
     const docId = this.props.match.params.dochash;
-    // fetch to the server to get the target document
-    // this.props.match.params.dochash
     fetch(`http://localhost:3000/getdocument/${docId}`, {
         credentials: 'include'
       })
@@ -259,11 +254,6 @@ class DocEditor extends React.Component {
         fontSize: `${newISize}px`
       }
     }
-    // const size = {
-    //   [newSize]: {
-    //     fontSize: `${newSize}px`
-    //   }
-    // };
     this.setState({
       currentFontSize: newISize,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newISize)),
@@ -335,4 +325,4 @@ class DocEditor extends React.Component {
 
 module.exports = {
   DocEditor,
-};;
+};

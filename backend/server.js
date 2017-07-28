@@ -90,7 +90,7 @@ io.on('connection', socket => {
 
   });
   socket.on('cursorMove', selection => {
-    console.log('selction', selection);
+    console.log('selection', selection);
     socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', selection);
 
   });

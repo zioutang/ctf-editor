@@ -35,19 +35,17 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
     wrapper: <div className="right-align" />,
   },
 }));
-const styleMap = {
 
+const styleMap = {
+  'BLUE': {
+    backgroundColor: 'blue'
+  }
 }
 
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
-    this.formatColor = this.formatColor.bind(this);
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.increaseSize = this.increaseSize.bind(this);
-    this.decreaseSize = this.decreaseSize.bind(this);
-    this.onChange = this.onChange.bind(this);
+
     /////////////////
     this.socket = io('http://localhost:3000');
 
@@ -65,7 +63,7 @@ class DocEditor extends React.Component {
       console.log('user left');
     });
 
-    this.socket.on('reveiveNewContent', stringifiedContent => {
+    this.socket.on('receiveNewContent', stringifiedContent => {
       const contentState = convertFromRaw(JSON.parse(stringifiedContent));
       const newEditorState = EditorState.createWithContent(contentState);
       this.setState({
@@ -110,32 +108,33 @@ class DocEditor extends React.Component {
     ///////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
-      customStyleMap: {},
-      currentFontSize: 7,
+      currentFontSize: 14,
       title: 'Loading ...'
     };
+    this.onClick = this.onClick.bind(this);
+    this.formatColor = this.formatColor.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.increaseSize = this.increaseSize.bind(this);
+    this.decreaseSize = this.decreaseSize.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.previousHighlight = null;
   }
   onChange(editorState) {
     ////////////////// be low is for selection highlight
     const selection = editorState.getSelection();
-    const turnBlue = {
-      'BLUE': {
-        backgroundcolor: 'blue'
-      }
-    }
-    this.setState({
-      customStyleMap: turnBlue
-    }) /// adding for turning blue for different users
-    //
+
     if (this.previousHighlight) {
       editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
       editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
       editorState = EditorState.acceptSelection(editorState, selection);
+      this.previousHighlight = null;
     }
-    editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
-    this.previousHighlight = editorState.getSelection();
-    if (selection.getStartOffset() === selection.getEndOffset()) {
+
+    if (selection.getStartOffset() !== selection.getEndOffset()) {
+      editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
+      this.previousHighlight = selection;
+      this.socket.emit('cursorMove', null);
+    } else {
       console.log('cursor', selection);
       this.socket.emit('cursorMove', selection);
     }
@@ -194,7 +193,6 @@ class DocEditor extends React.Component {
       .then(resp => {
         if (resp.success) {
           const raw = resp.document.content;
-
           if (raw) {
             const contentState = convertFromRaw(JSON.parse(raw));
             this.setState({
@@ -245,42 +243,42 @@ class DocEditor extends React.Component {
   }
 
   formatColor(color) {
-    const map = {
-      [color.hex]: {
-        color: color.hex,
-      },
+    const key = color.hex;
+    styleMap[key] = {
+      color: color.hex,
     };
-    const key = Object.keys(map)[0];
     this.setState({
-      customStyleMap: map,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, key),
     });
   }
 
   increaseSize() {
-    const newSize = this.state.currentFontSize + 1;
-    const size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
+    const newISize = this.state.currentFontSize + 1;
+    if (!styleMap[newISize]) {
+      styleMap[newISize] = {
+        fontSize: `${newISize}px`
       }
-    };
+    }
+    // const size = {
+    //   [newSize]: {
+    //     fontSize: `${newSize}px`
+    //   }
+    // };
     this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
+      currentFontSize: newISize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newISize)),
     });
   }
   decreaseSize() {
-    const newSize = this.state.currentFontSize - 1;
-    const size = {
-      [newSize]: {
-        fontSize: `${newSize}px`
+    const newDSize = this.state.currentFontSize - 1;
+    if (!styleMap[newDSize]) {
+      styleMap[newDSize] = {
+        fontSize: `${newDSize}px`
       }
-    };
+    }
     this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
+      currentFontSize: newDSize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newDSize)),
     });
   }
 
@@ -322,7 +320,7 @@ class DocEditor extends React.Component {
             <Editor
               // ref="editor"
               blockRenderMap={blockTypes}
-              customStyleMap={this.state.customStyleMap}
+              customStyleMap={styleMap}
               editorState={this.state.editorState}
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.onChange}/>
@@ -337,4 +335,4 @@ class DocEditor extends React.Component {
 
 module.exports = {
   DocEditor,
-};
+};;

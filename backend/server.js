@@ -52,8 +52,7 @@ passport.use(new LocalStrategy(
       }
       return done(null, user);
     });
-  }
-  )));
+  })));
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -70,55 +69,40 @@ app.use(passport.session());
 /* END OF PASSPORT SETUP */
 
 /* SOCKET SETUP */
-// io.on('connection', (socket) => {
-//   socket.on('join', ({
-//     docId,
-//   }) => {
-//     const rooms = io.sockets.adapter.rooms;
-//     if (rooms[docId] && rooms[docId].length === 4) {
-//       socket.emit('roomFull');
-//       return;
-//     }
-//
-//     socket.room = docId;
-//     socket.join(socket.room);
-//
-//     if (rooms[socket.room].length === 1) {
-//       rooms[socket.room].availableColors = ['purple', 'green', 'yellow', 'red'];
-//       rooms[socket.room].inRoom = [];
-//     }
-//     socket.color = rooms[socket.room].availableColors.pop();
-//
-//     socket.broadcast.to(socket.room).emit('userJoined', socket.color);
-//     socket.emit('joinSuccess', {
-//       color: socket.color,
-//       inRoom: rooms[socket.room].inRoom,
-//     });
-//     rooms[socket.room].inRoom.push(socket.color);
-//   });
-//
-//   socket.on('contentUpdate', (newContent) => {
-//     socket.broadcast.to(socket.room).emit('contentUpdate', newContent);
-//   });
-//
-//   socket.on('cursor', (selection) => {
-//     console.log('SELECTION', selection);
-//     socket.broadcast.to(socket.room).emit('newCursor', {
-//       incomingSelectionObj: selection,
-//       color: socket.color,
-//     });
-//   });
-//
-//   socket.on('disconnect', () => {
-//     const theRoom = io.sockets.adapter.rooms[socket.room];
-//     if (theRoom) {
-//       theRoom.colors.push(socket.color);
-//     }
-//     socket.leave(socket.room);
-//   });
-//
-//   socket.emit('connectionReady');
-// });
+io.on('connection', socket => {
+
+  socket.on('join', ({
+    doc
+  }) => {
+    console.log('join', doc);
+    socket.emit('back', {
+      doc
+    });
+    socket.join(doc) /// join a room named doc
+    socket.theOneRoom = doc;
+
+    socket.broadcast.to(doc).emit('userJoin'); // server sending out event within the room
+    // io.sockets.emit('userJoin');
+  });
+
+  socket.on('newContent', stringifiedContent => {
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', stringifiedContent);
+
+  });
+  socket.on('cursorMove', selection => {
+    console.log('selection', selection);
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', selection);
+
+  });
+
+  socket.on('disconnect', () => {
+    console.log('disconnect');
+    socket.leave(socket.theOneRoom); /// when user leave the room
+    socket.broadcast.to(socket.theOneRoom).emit('userLeft');
+  });
+
+
+})
 /* END OF SOCKET SETUP */
 
 app.get('/register', (req, res) => {
@@ -152,7 +136,7 @@ app.post('/login', passport.authenticate('local'), (req, res) => {
 });
 /* END OF AUTH ROUTES */
 
-
+//
 app.get('/getuserdocuments', (req, res) => {
   req.user.populate('documents')
     .execPopulate()
@@ -202,13 +186,14 @@ app.post('/newdocument', (req, res) => {
 });
 
 app.post('/savedocument/:docId', (req, res) => {
+  console.log(req.params.docId);
   Doc.update({
-    _id: req.params.docId,
-  }, {
-    $set: {
-      content: req.body.content,
-    },
-  })
+      _id: req.params.docId,
+    }, {
+      $set: {
+        content: req.body.content,
+      },
+    })
     .then(() => {
       res.json({
         success: true,
@@ -241,12 +226,12 @@ app.get('/getdocument/:docId', (req, res) => {
 app.get('/addshareddoc/:docId', (req, res) => {
   // To be fully correct, this route should also check that it isn't adding a duplicate
   User.update({
-    _id: req.user.id,
-  }, {
-    $push: {
-      documents: req.params.docId,
-    },
-  })
+      _id: req.user.id,
+    }, {
+      $push: {
+        documents: req.params.docId,
+      },
+    })
     .then(() => {
       res.json({
         success: true,

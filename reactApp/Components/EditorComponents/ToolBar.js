@@ -38,7 +38,6 @@ class ToolBar extends React.Component {
         console.log(this.state.style);
         let copy = this.state.style.slice();
         copy.splice(index, 1);
-
         this.setState({
           style: copy
         })

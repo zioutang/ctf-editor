@@ -36,6 +36,11 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   },
 }));
 
+const styleMap = {
+  'BLUE': {
+    backgroundColor: 'blue'
+  }
+}
 
 class DocEditor extends React.Component {
   constructor(props) {
@@ -108,9 +113,15 @@ class DocEditor extends React.Component {
     // /////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
-      customStyleMap: {},
-      currentFontSize: 7,
+      currentFontSize: 14,
+      title: 'Loading ...'
     };
+    this.onClick = this.onClick.bind(this);
+    this.formatColor = this.formatColor.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.increaseSize = this.increaseSize.bind(this);
+    this.decreaseSize = this.decreaseSize.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.previousHighlight = null;
   }
   onChange(editorState) {
@@ -119,13 +130,16 @@ class DocEditor extends React.Component {
 
     if (this.previousHighlight) {
       editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
-      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
       editorState = EditorState.acceptSelection(editorState, selection);
+      this.previousHighlight = null;
     }
 
-    editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    this.previousHighlight = editorState.getSelection();
-    if (selection.getStartOffset() === selection.getEndOffset()) {
+    if (selection.getStartOffset() !== selection.getEndOffset()) {
+      editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
+      this.previousHighlight = selection;
+      this.socket.emit('cursorMove', null);
+    } else {
       console.log('cursor', selection);
       this.socket.emit('cursorMove', selection);
     }
@@ -145,16 +159,67 @@ class DocEditor extends React.Component {
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     const docId = this.props.match.params.dochash;
 
-    // / fetch to server to save it.
+    fetch(`http://localhost:3000/savedocument/${docId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: stringifiedContent
+        })
+      })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.success) {
+          // successful save
+        } else {
+          throw resp.error;
+        }
+      })
+      .catch(err => {
+        throw err
+      });
+    /// fetch to server to save it.
     // credential : 'include'
     // header: {'Content-type': 'application/json'}
     // body : JSON.stringify({content: stringifiedContent })
   }
-  ComponentDidMount() {
+
+  componentDidMount() {
+    const docId = this.props.match.params.dochash;
     // fetch to the server to get the target document
     // this.props.match.params.dochash
+    fetch(`http://localhost:3000/getdocument/${docId}`, {
+        credentials: 'include'
+      })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.success) {
+          const raw = resp.document.content;
+          if (raw) {
+            const contentState = convertFromRaw(JSON.parse(raw));
+            this.setState({
+              editorState: EditorState.createWithContent(contentState),
+              title: resp.document.title
+            });
+          } else {
+            this.setState({
+              title: resp.document.title
+            });
+          }
+
+        } else {
+          this.setState({
+            error: resp.error.errmsg
+          });
+        }
+      })
+      .catch(err => {
+        throw err
+      });
   }
-  ComponentWillUnmount() {
+  componentWillUnmount() {
     // this.socket.emit('disconnect');
     this.socket.disconnect();
   }
@@ -182,48 +247,67 @@ class DocEditor extends React.Component {
   }
 
   formatColor(color) {
-    const map = {
-      [color.hex]: {
-        color: color.hex,
-      },
+    const key = color.hex;
+    styleMap[key] = {
+      color: color.hex,
     };
-    const key = Object.keys(map)[0];
     this.setState({
-      customStyleMap: map,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, key),
     });
   }
 
   increaseSize() {
+//<<<<<<< HEAD
     const newSize = this.state.currentFontSize + 1;
     const size = {
       [newSize]: {
         fontSize: `${newSize}px`,
       },
     };
+// =======
+//     const newISize = this.state.currentFontSize + 1;
+//     if (!styleMap[newISize]) {
+//       styleMap[newISize] = {
+//         fontSize: `${newISize}px`
+//       }
+//     }
+//     // const size = {
+//     //   [newSize]: {
+//     //     fontSize: `${newSize}px`
+//     //   }
+//     // };
+// >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
+      currentFontSize: newISize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newISize)),
     });
   }
   decreaseSize() {
+// <<<<<<< HEAD
     const newSize = this.state.currentFontSize - 1;
     const size = {
       [newSize]: {
         fontSize: `${newSize}px`,
       },
     };
+// =======
+//     const newDSize = this.state.currentFontSize - 1;
+//     if (!styleMap[newDSize]) {
+//       styleMap[newDSize] = {
+//         fontSize: `${newDSize}px`
+//       }
+//     }
+// >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     this.setState({
-      customStyleMap: size,
-      currentFontSize: newSize,
-      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
+      currentFontSize: newDSize,
+      editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newDSize)),
     });
   }
 
   render() {
     return (
       <div>
+// <<<<<<< HEAD
         {this.state.top && (
           <div
             style={{
@@ -259,10 +343,56 @@ class DocEditor extends React.Component {
           />
         </div>
       </div>
+// =======
+//         <h1>Editing your document </h1>
+//         <p>Id: {this.props.match.params.dochash}</p>
+//           {this.state.top && (
+//             <div
+//               style={{
+//                 position: 'absolute',
+//                 backgroundColor: 'red',
+//                 width: '2px',
+//                 height: this.state.height,
+//                 top: this.state.top,
+//                 left: this.state.left
+//               }}
+//               >
+//             </div>
+//           )}
+//           <div>
+//             <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+//           </div>
+//
+//           <div>
+//             <AppBar title={this.state.title}/>
+//           </div>
+//           <div className="toolbar">
+//             <ToolBar
+//               Click={this.onClick}
+//               colorHandle={this.formatColor}
+//               sizeIncrease={this.increaseSize}
+//               sizeDecrease={this.decreaseSize}
+//               // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
+//             />
+//           </div>
+//           <div className="editor">
+//             <Editor
+//               // ref="editor"
+//               blockRenderMap={blockTypes}
+//               customStyleMap={styleMap}
+//               editorState={this.state.editorState}
+//               handleKeyCommand={this.handleKeyCommand}
+//               onChange={this.onChange}/>
+//           </div>
+//           <div>
+//           <button onClick={() => this.saveDoc()}>Save the Document</button>
+//           </div>
+//           </div>
+// >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     );
   }
 }
 
 module.exports = {
   DocEditor,
-};
+};;

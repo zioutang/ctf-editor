@@ -114,6 +114,7 @@ class DocDirectory extends React.Component {
     return (
       <div>
         <AppBar
+          className="appbar"
           titleStyle={{ textAlign: 'center' }}
           title="Your Directory"
           showMenuIconButton={false}

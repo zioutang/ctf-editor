@@ -282,36 +282,28 @@ class DocEditor extends React.Component {
   render() {
     return (
       <div>
-        <AppBar
-          titleStyle={{ textAlign: 'center' }}
-          title="Document Editor"
-          showMenuIconButton={false}
-        />        {this.state.top && (
-          <div
-            style={{
-              position: 'absolute',
-              backgroundColor: 'red',
-              width: '2px',
-              height: this.state.height,
-              top: this.state.top,
-              left: this.state.left,
-            }}
+        <div style={{ postion: 'fixed' }}>
+          <AppBar
+            className="appbar"
+            titleStyle={{ textAlign: 'center' }}
+            title={'Document Editor | ID: ' + this.props.match.params.dochash}
+            showMenuIconButton={false}
           />
-        )}
-        <p>Id: {this.props.match.params.dochash}</p>
-        <div>
-          <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
-          <button onClick={() => this.saveDoc()}>Save the Document</button>
+          <div>
+            <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+            <button onClick={() => this.saveDoc()}>Save the Document</button>
+          </div>
+          <div className="toolbar" style={{ textAlign: 'center' }}>
+            <ToolBar
+              Click={this.onClick}
+              colorHandle={this.formatColor}
+              sizeIncrease={this.increaseSize}
+              sizeDecrease={this.decreaseSize}
+              // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
+            />
+          </div>
         </div>
-        <div className="toolbar">
-          <ToolBar
-            Click={this.onClick}
-            colorHandle={this.formatColor}
-            sizeIncrease={this.increaseSize}
-            sizeDecrease={this.decreaseSize}
-            // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
-          />
-        </div>
+
         <div className="editor">
           <Editor
             // ref="editor"

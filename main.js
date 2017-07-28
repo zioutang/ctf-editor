@@ -18,9 +18,9 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    frame: false,
+    frame: true,
     // titleBarStyle: 'customButtonsOnHover',
-    // transparent: true,
+    // transparent: false,
   });
 
   // and load the index.html of the app.
@@ -29,7 +29,7 @@ function createWindow() {
     protocol: 'file:',
     slashes: true,
   }));
-
+  //
   // Open the DevTools.
   if (DEV_MODE) {
     mainWindow.webContents.openDevTools();

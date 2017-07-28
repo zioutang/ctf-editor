@@ -68,7 +68,7 @@ class DocEditor extends React.Component {
       console.log('user left');
     });
 
-    this.socket.on('reveiveNewContent', (stringifiedContent) => {
+    this.socket.on('receiveNewContent', (stringifiedContent) => {
       const contentState = convertFromRaw(JSON.parse(stringifiedContent));
       const newEditorState = EditorState.createWithContent(contentState);
       this.setState({
@@ -113,7 +113,7 @@ class DocEditor extends React.Component {
     // /////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
-      currentFontSize: 14,
+      currentFontSize: 18,
       title: 'Loading ...',
     };
     this.onClick = this.onClick.bind(this);
@@ -181,16 +181,10 @@ class DocEditor extends React.Component {
       .catch((err) => {
         throw err;
       });
-    // / fetch to server to save it.
-    // credential : 'include'
-    // header: {'Content-type': 'application/json'}
-    // body : JSON.stringify({content: stringifiedContent })
   }
 
   componentDidMount() {
     const docId = this.props.match.params.dochash;
-    // fetch to the server to get the target document
-    // this.props.match.params.dochash
     fetch(`http://localhost:3000/getdocument/${docId}`, {
       credentials: 'include',
     })
@@ -257,47 +251,24 @@ class DocEditor extends React.Component {
   }
 
   increaseSize() {
-    // <<<<<<< HEAD
-    const newSize = this.state.currentFontSize + 1;
-    const size = {
-      [newSize]: {
-        fontSize: `${newSize}px`,
-      },
-    };
-    // =======
-    //     const newISize = this.state.currentFontSize + 1;
-    //     if (!styleMap[newISize]) {
-    //       styleMap[newISize] = {
-    //         fontSize: `${newISize}px`
-    //       }
-    //     }
-    //     // const size = {
-    //     //   [newSize]: {
-    //     //     fontSize: `${newSize}px`
-    //     //   }
-    //     // };
-    // >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
+    const newISize = this.state.currentFontSize + 1;
+    if (!styleMap[newISize]) {
+      styleMap[newISize] = {
+        fontSize: `${newISize}px`,
+      };
+    }
     this.setState({
       currentFontSize: newISize,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newISize)),
     });
   }
   decreaseSize() {
-    // <<<<<<< HEAD
-    const newSize = this.state.currentFontSize - 1;
-    const size = {
-      [newSize]: {
-        fontSize: `${newSize}px`,
-      },
-    };
-    // =======
-    //     const newDSize = this.state.currentFontSize - 1;
-    //     if (!styleMap[newDSize]) {
-    //       styleMap[newDSize] = {
-    //         fontSize: `${newDSize}px`
-    //       }
-    //     }
-    // >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
+    const newDSize = this.state.currentFontSize - 1;
+    if (!styleMap[newDSize]) {
+      styleMap[newDSize] = {
+        fontSize: `${newDSize}px`,
+      };
+    }
     this.setState({
       currentFontSize: newDSize,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newDSize)),
@@ -339,7 +310,7 @@ class DocEditor extends React.Component {
           <Editor
             // ref="editor"
             blockRenderMap={blockTypes}
-            customStyleMap={this.state.customStyleMap}
+            customStyleMap={styleMap}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
@@ -347,52 +318,6 @@ class DocEditor extends React.Component {
         </div>
         <button onClick={() => this.saveDoc()}>Save the Document</button>
       </div>
-    // =======
-    //         <h1>Editing your document </h1>
-    //         <p>Id: {this.props.match.params.dochash}</p>
-    //           {this.state.top && (
-    //             <div
-    //               style={{
-    //                 position: 'absolute',
-    //                 backgroundColor: 'red',
-    //                 width: '2px',
-    //                 height: this.state.height,
-    //                 top: this.state.top,
-    //                 left: this.state.left
-    //               }}
-    //               >
-    //             </div>
-    //           )}
-    //           <div>
-    //             <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
-    //           </div>
-    //
-    //           <div>
-    //             <AppBar title={this.state.title}/>
-    //           </div>
-    //           <div className="toolbar">
-    //             <ToolBar
-    //               Click={this.onClick}
-    //               colorHandle={this.formatColor}
-    //               sizeIncrease={this.increaseSize}
-    //               sizeDecrease={this.decreaseSize}
-    //               // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
-    //             />
-    //           </div>
-    //           <div className="editor">
-    //             <Editor
-    //               // ref="editor"
-    //               blockRenderMap={blockTypes}
-    //               customStyleMap={styleMap}
-    //               editorState={this.state.editorState}
-    //               handleKeyCommand={this.handleKeyCommand}
-    //               onChange={this.onChange}/>
-    //           </div>
-    //           <div>
-    //           <button onClick={() => this.saveDoc()}>Save the Document</button>
-    //           </div>
-    //           </div>
-    // >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     );
   }
 }

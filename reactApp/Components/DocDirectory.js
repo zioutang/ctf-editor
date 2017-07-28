@@ -1,15 +1,13 @@
-// import React from 'react';
-// import {
-//   Card,
-//   CardTitle
-// } from 'material-ui/Card';
-//
-//
-// const DocDirectory = () => (
-//   <Card className="container">
-//     <CardTitle title="React Application" subtitle="This is the home page." />
-//   </Card>
-// );
+import {
+  Card,
+  CardTitle,
+} from 'material-ui/Card';
+
+import Paper from 'material-ui/Paper';
+import AppBar from 'material-ui/AppBar';
+import { GridList, GridTile } from 'material-ui/GridList';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 import React from 'react';
 import {
@@ -114,34 +112,26 @@ class DocDirectory extends React.Component {
   render() {
     let newDocTitleField;
     let shareIdField;
+
     return (
       <div>
-        <h1>Documents Directory</h1>
+        <AppBar style={{ margin: '0' }} title="Your Directory" />
         <p>{this.state.error}</p>
-        <input
-          ref={node => {newDocTitleField = node}}
-          placeholder="new document title"
-        />
-        <button onClick={() => {
+        <TextField hintText="New document title" onChange={(e)=> {newDocTitleField = e.target}} />
+        <FlatButton label="Create Document" primary={true} onTouchTap={() => {
           this.newDoc(newDocTitleField.value);
           newDocTitleField.value = '';
-        }}>Create Document</button>
-        <div style={{outline: 'solid', padding: 10, margin: 10}}>
-          <label>My Documents</label>
-          <div>
-            {this.state.userDocs.map(doc => <div key={doc._id}><Link to={`/edit/${doc._id}`}>{doc.title}</Link></div>)}
-          </div>
-        </div>
-        <div>
-          <input
-            ref={node => {shareIdField = node}}
-            placeholder="paste a doc id shared with you here"
-          />
-          <button onClick={() => {
-            this.addSharedDoc(shareIdField.value);
-            shareIdField.value = '';
-          }}>Add Shared Document</button>
-        </div>
+        }}
+        />
+        <TextField hintText="Document ID" onChange={(e)=> {shareIdField = e.target}} />
+        <FlatButton label="Add Shared Document" primary={true} onTouchTap={() => {
+          this.addSharedDoc(shareIdField.value);
+          shareIdField.value = '';
+        }}
+        />
+        <Paper zDepth={2} style={{ display: 'flex' }}>
+          {this.state.userDocs.map(doc => <div style={{ display: 'block' }} key={doc._id}><img height={'40px'} alt={'hello'} src='./public/images/thedoc.png' /><p>{doc.title}</p></div>)}
+        </Paper>
       </div>
     )
   }

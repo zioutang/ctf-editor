@@ -10,9 +10,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 
 import React from 'react';
-import {
-  Link
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class DocDirectory extends React.Component {
   constructor(props) {
@@ -130,7 +128,7 @@ class DocDirectory extends React.Component {
         }}
         />
         <Paper zDepth={2} style={{ display: 'flex' }}>
-          {this.state.userDocs.map(doc => <div style={{ display: 'block' }} key={doc._id}><img height={'40px'} alt={'hello'} src='./public/images/thedoc.png' /><p>{doc.title}</p></div>)}
+          {this.state.userDocs.map(doc => <div style={{ display: 'block' }} key={doc._id}><Link to={`/edit/${doc._id}`}><img height={'40px'} alt={'hello'} src='./public/images/thedoc.png' /></Link><p>{doc.title}</p></div>)}
         </Paper>
       </div>
     )

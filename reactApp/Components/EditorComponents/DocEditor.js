@@ -321,6 +321,9 @@ class DocEditor extends React.Component {
         <div>
           <AppBar title="CTF_Documents" />
         </div>
+        <div>
+          <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+        </div>
         <div className="toolbar">
           <ToolBar
             Click={this.onClick}

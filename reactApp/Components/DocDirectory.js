@@ -116,7 +116,7 @@ class DocDirectory extends React.Component {
     let shareIdField;
     return (
       <div>
-        <h1>Documents Portal</h1>
+        <h1>Documents Directory</h1>
         <p>{this.state.error}</p>
         <input
           ref={node => {newDocTitleField = node}}

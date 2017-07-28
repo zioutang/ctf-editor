@@ -35,7 +35,9 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
     wrapper: <div className="right-align" />,
   },
 }));
+const styleMap = {
 
+}
 
 class DocEditor extends React.Component {
   constructor(props) {
@@ -47,93 +49,101 @@ class DocEditor extends React.Component {
     this.decreaseSize = this.decreaseSize.bind(this);
     this.onChange = this.onChange.bind(this);
     /////////////////
-    // this.socket = io('http://localhost:3000');
-    //
-    // this.socket.on('userJoin', () => {
-    //   console.log('joined');
-    // });
-    //
-    // this.socket.on('back', ({
-    //   doc
-    // }) => {
-    //   console.log('you just joined', doc);
-    // });
-    //
-    // this.socket.on('userLeft', () => {
-    //   console.log('user left');
-    // });
-    //
-    // this.socket.on('reveiveNewContent', stringifiedContent => {
-    //   const contentState = convertFromRaw(JSON.parse(stringifiedContent));
-    //   const newEditorState = EditorState.createWithContent(contentState);
-    //   this.setState({
-    //     editorState: newEditorState
-    //   })
-    // });
-    //
-    // this.socket.on('receiveNewCursor', incomingSelectionObj => {
-    //   // console.log('inc', incomingSelectionObj);
-    //   let editorState = this.state.editorState;
-    //   const ogEditorState = editorState;
-    //   const ogSelection = editorState.getSelection();
-    //   const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
-    //   const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
-    //   this.setState({
-    //     editorState: temporaryEditorState
-    //   }, () => {
-    //     const winSel = window.getSelection();
-    //     const range = winSel.getRangeAt(0);
-    //     const rects = range.getClientRects()[0];
-    //     console.log('range', range);
-    //     console.log('rects', rects);
-    //     const {
-    //       top,
-    //       left,
-    //       bottom
-    //     } = rects;
-    //     this.setState({
-    //       editorState: ogEditorState,
-    //       top,
-    //       left,
-    //       height: (bottom - top)
-    //     })
-    //   })
-    //
-    // }); /// dealling with the cursor position
-    //
-    // this.socket.emit('join', {
-    //   doc: this.props.match.params.dochash
-    // }); /// event to emit the target doc
+    this.socket = io('http://localhost:3000');
+
+    this.socket.on('userJoin', () => {
+      console.log('joined');
+    });
+
+    this.socket.on('back', ({
+      doc
+    }) => {
+      console.log('you just joined', doc);
+    });
+
+    this.socket.on('userLeft', () => {
+      console.log('user left');
+    });
+
+    this.socket.on('reveiveNewContent', stringifiedContent => {
+      const contentState = convertFromRaw(JSON.parse(stringifiedContent));
+      const newEditorState = EditorState.createWithContent(contentState);
+      this.setState({
+        editorState: newEditorState
+      })
+    });
+
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      // console.log('inc', incomingSelectionObj);
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState;
+      const ogSelection = editorState.getSelection();
+      const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
+      this.setState({
+        editorState: temporaryEditorState
+      }, () => {
+        const winSel = window.getSelection();
+        const range = winSel.getRangeAt(0);
+        const rects = range.getClientRects()[0];
+        console.log('range', range);
+        console.log('rects', rects);
+        const {
+          top,
+          left,
+          bottom
+        } = rects;
+        this.setState({
+          editorState: ogEditorState,
+          top,
+          left,
+          height: (bottom - top)
+        })
+      })
+
+    }); /// dealling with the cursor position
+
+    this.socket.emit('join', {
+      doc: this.props.match.params.dochash
+    }); /// event to emit the target doc
 
     ///////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
       currentFontSize: 7,
+      title: 'Loading ...'
     };
     this.previousHighlight = null;
   }
   onChange(editorState) {
     ////////////////// be low is for selection highlight
-    // const selection = editorState.getSelection();
+    const selection = editorState.getSelection();
+    const turnBlue = {
+      'BLUE': {
+        backgroundcolor: 'blue'
+      }
+    }
+    this.setState({
+      customStyleMap: turnBlue
+    }) /// adding for turning blue for different users
     //
-    // if (this.previousHighlight) {
-    //   editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
-    //   editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    //   editorState = EditorState.acceptSelection(editorState, selection);
-    // }
-    //
-    // editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    // this.previousHighlight = editorState.getSelection();
-    // if (selection.getStartOffset() === selection.getEndOffset()) {
-    //   console.log('cursor', selection);
-    //   this.socket.emit('cursorMove', selection);
-    // }
+    if (this.previousHighlight) {
+      editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+      editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
+      editorState = EditorState.acceptSelection(editorState, selection);
+    }
+    editorState = RichUtils.toggleInlineStyle(editorState, 'BLUE');
+    this.previousHighlight = editorState.getSelection();
+    if (selection.getStartOffset() === selection.getEndOffset()) {
+      console.log('cursor', selection);
+      this.socket.emit('cursorMove', selection);
+    }
     // ///////////////////////////
     //
-    // const contentState = editorState.getCurrentContent(); // current content (the changing part)
-    // const stringifiedContent = JSON.stringify(convertToRaw(contentState));
-    // this.socket.emit('newContent', stringifiedContent); // sending out the change
+    const contentState = editorState.getCurrentContent(); // current content (the changing part)
+    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    this.socket.emit('newContent', stringifiedContent); // sending out the change
 
     this.setState({
       editorState,
@@ -172,7 +182,9 @@ class DocEditor extends React.Component {
     // header: {'Content-type': 'application/json'}
     // body : JSON.stringify({content: stringifiedContent })
   }
-  ComponentDidMount() {
+
+  componentDidMount() {
+    const docId = this.props.match.params.dochash;
     // fetch to the server to get the target document
     // this.props.match.params.dochash
     fetch(`http://localhost:3000/getdocument/${docId}`, {
@@ -205,7 +217,7 @@ class DocEditor extends React.Component {
         throw err
       });
   }
-  ComponentWillUnmount() {
+  componentWillUnmount() {
     // this.socket.emit('disconnect');
     this.socket.disconnect();
   }
@@ -271,10 +283,12 @@ class DocEditor extends React.Component {
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newSize)),
     });
   }
+
   render() {
     return (
       <div>
-        <h1>Editing your document</h1>
+        <h1>Editing your document </h1>
+        <p>Id: {this.props.match.params.dochash}</p>
           {this.state.top && (
             <div
               style={{
@@ -288,9 +302,12 @@ class DocEditor extends React.Component {
               >
             </div>
           )}
-          <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
           <div>
-            <AppBar title="CTF_Documents" />
+            <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+          </div>
+
+          <div>
+            <AppBar title={this.state.title}/>
           </div>
           <div className="toolbar">
             <ToolBar

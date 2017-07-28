@@ -59,7 +59,7 @@ class DocEditor extends React.Component {
     });
 
     this.socket.on('back', ({
-      doc
+      doc,
     }) => {
       console.log('you just joined', doc);
     });
@@ -68,23 +68,23 @@ class DocEditor extends React.Component {
       console.log('user left');
     });
 
-    this.socket.on('reveiveNewContent', stringifiedContent => {
+    this.socket.on('reveiveNewContent', (stringifiedContent) => {
       const contentState = convertFromRaw(JSON.parse(stringifiedContent));
       const newEditorState = EditorState.createWithContent(contentState);
       this.setState({
-        editorState: newEditorState
-      })
+        editorState: newEditorState,
+      });
     });
 
-    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+    this.socket.on('receiveNewCursor', (incomingSelectionObj) => {
       // console.log('inc', incomingSelectionObj);
-      let editorState = this.state.editorState;
+      const editorState = this.state.editorState;
       const ogEditorState = editorState;
       const ogSelection = editorState.getSelection();
       const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
       const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
       this.setState({
-        editorState: temporaryEditorState
+        editorState: temporaryEditorState,
       }, () => {
         const winSel = window.getSelection();
         const range = winSel.getRangeAt(0);
@@ -94,21 +94,21 @@ class DocEditor extends React.Component {
         const {
           top,
           left,
-          bottom
+          bottom,
         } = rects;
         this.setState({
           editorState: ogEditorState,
           top,
           left,
-          height: (bottom - top)
-        })
-      })
+          height: (bottom - top),
+        });
+      });
     //
-    }); /// dealling with the cursor position
+    }); // / dealling with the cursor position
     //
     this.socket.emit('join', {
-      doc: this.props.match.params.dochash
-    }); /// event to emit the target doc
+      doc: this.props.match.params.dochash,
+    }); // / event to emit the target doc
 
     // /////////////////
     this.state = {
@@ -124,6 +124,7 @@ class DocEditor extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.previousHighlight = null;
   }
+
   onChange(editorState) {
     // //////////////// be low is for selection highlight
     const selection = editorState.getSelection();

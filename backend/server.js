@@ -69,55 +69,40 @@ app.use(passport.session());
 /* END OF PASSPORT SETUP */
 
 /* SOCKET SETUP */
-io.on('connection', (socket) => {
+io.on('connection', socket => {
+
   socket.on('join', ({
-    docId,
+    doc
   }) => {
-    const rooms = io.sockets.adapter.rooms;
-    if (rooms[docId] && rooms[docId].length === 4) {
-      socket.emit('roomFull');
-      return;
-    }
-
-    socket.room = docId;
-    socket.join(socket.room);
-
-    if (rooms[socket.room].length === 1) {
-      rooms[socket.room].availableColors = ['purple', 'green', 'yellow', 'red'];
-      rooms[socket.room].inRoom = [];
-    }
-    socket.color = rooms[socket.room].availableColors.pop();
-
-    socket.broadcast.to(socket.room).emit('userJoined', socket.color);
-    socket.emit('joinSuccess', {
-      color: socket.color,
-      inRoom: rooms[socket.room].inRoom,
+    console.log('join', doc);
+    socket.emit('back', {
+      doc
     });
-    rooms[socket.room].inRoom.push(socket.color);
+    socket.join(doc) /// join a room named doc
+    socket.theOneRoom = doc;
+
+    socket.broadcast.to(doc).emit('userJoin'); // server sending out event within the room
+    // io.sockets.emit('userJoin');
   });
 
-  socket.on('contentUpdate', (newContent) => {
-    socket.broadcast.to(socket.room).emit('contentUpdate', newContent);
-  });
+  socket.on('newContent', stringifiedContent => {
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', stringifiedContent);
 
-  socket.on('cursor', (selection) => {
-    console.log('SELECTION', selection);
-    socket.broadcast.to(socket.room).emit('newCursor', {
-      incomingSelectionObj: selection,
-      color: socket.color,
-    });
+  });
+  socket.on('cursorMove', selection => {
+    console.log('selction', selection);
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', selection);
+
   });
 
   socket.on('disconnect', () => {
-    const theRoom = io.sockets.adapter.rooms[socket.room];
-    if (theRoom) {
-      theRoom.colors.push(socket.color);
-    }
-    socket.leave(socket.room);
+    console.log('disconnect');
+    socket.leave(socket.theOneRoom); /// when user leave the room
+    socket.broadcast.to(socket.theOneRoom).emit('userLeft');
   });
 
-  socket.emit('connectionReady');
-});
+
+})
 /* END OF SOCKET SETUP */
 
 app.get('/register', (req, res) => {

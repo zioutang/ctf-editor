@@ -10,17 +10,17 @@ import {
   RichUtils,
   DefaultDraftBlockRenderMap,
   convertToRaw,
-  convertFromRaw
+  convertFromRaw,
 
 } from 'draft-js';
 
 import {
-  Map
+  Map,
 } from 'immutable';
 
 
 import {
-  ToolBar
+  ToolBar,
 } from './ToolBar';
 
 
@@ -37,18 +37,23 @@ const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
 }));
 
 const styleMap = {
-  'BLUE': {
-    backgroundColor: 'blue'
-  }
-}
+  BLUE: {
+    backgroundColor: 'blue',
+  },
+};
 
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
-
-    /////////////////
+    this.onClick = this.onClick.bind(this);
+    this.formatColor = this.formatColor.bind(this);
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    this.increaseSize = this.increaseSize.bind(this);
+    this.decreaseSize = this.decreaseSize.bind(this);
+    this.onChange = this.onChange.bind(this);
+    // ///////////////
     this.socket = io('http://localhost:3000');
-
+    //
     this.socket.on('userJoin', () => {
       console.log('joined');
     });
@@ -84,32 +89,34 @@ class DocEditor extends React.Component {
         const winSel = window.getSelection();
         const range = winSel.getRangeAt(0);
         const rects = range.getClientRects()[0];
-        console.log('range', range);
-        console.log('rects', rects);
-        const {
-          top,
-          left,
-          bottom
-        } = rects;
-        this.setState({
-          editorState: ogEditorState,
-          top,
-          left,
-          height: (bottom - top)
-        })
+        // console.log('range', range);
+        // console.log('rects', rects);
+        if (rects) {
+          const {
+            top,
+            left,
+            bottom
+          } = rects;
+          this.setState({
+            editorState: ogEditorState,
+            top,
+            left,
+            height: (bottom - top)
+          });
+        }
       })
-
+      //
     }); /// dealling with the cursor position
-
+    //
     this.socket.emit('join', {
       doc: this.props.match.params.dochash
     }); /// event to emit the target doc
 
-    ///////////////////
+    // /////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
-      currentFontSize: 14,
-      title: 'Loading ...'
+      currentFontSize: 18,
+      title: 'Loading ...',
     };
     this.onClick = this.onClick.bind(this);
     this.formatColor = this.formatColor.bind(this);
@@ -120,7 +127,7 @@ class DocEditor extends React.Component {
     this.previousHighlight = null;
   }
   onChange(editorState) {
-    ////////////////// be low is for selection highlight
+    // //////////////// be low is for selection highlight
     const selection = editorState.getSelection();
 
     if (this.previousHighlight) {
@@ -138,8 +145,8 @@ class DocEditor extends React.Component {
       console.log('cursor', selection);
       this.socket.emit('cursorMove', selection);
     }
-    // ///////////////////////////
-    //
+    // /////////////////////////
+
     const contentState = editorState.getCurrentContent(); // current content (the changing part)
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     this.socket.emit('newContent', stringifiedContent); // sending out the change
@@ -147,8 +154,7 @@ class DocEditor extends React.Component {
     this.setState({
       editorState,
     });
-
-  } /// made some change on this function
+  } // / made some change on this function
 
   saveDoc() {
     const contentState = this.state.editorState.getCurrentContent(); // current content (the changing part)
@@ -159,22 +165,22 @@ class DocEditor extends React.Component {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: stringifiedContent
-        })
+          content: stringifiedContent,
+        }),
       })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           // successful save
         } else {
           throw resp.error;
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
 
   }
@@ -182,32 +188,31 @@ class DocEditor extends React.Component {
   componentDidMount() {
     const docId = this.props.match.params.dochash;
     fetch(`http://localhost:3000/getdocument/${docId}`, {
-        credentials: 'include'
+        credentials: 'include',
       })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           const raw = resp.document.content;
           if (raw) {
             const contentState = convertFromRaw(JSON.parse(raw));
             this.setState({
               editorState: EditorState.createWithContent(contentState),
-              title: resp.document.title
+              title: resp.document.title,
             });
           } else {
             this.setState({
-              title: resp.document.title
+              title: resp.document.title,
             });
           }
-
         } else {
           this.setState({
-            error: resp.error.errmsg
+            error: resp.error.errmsg,
           });
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
   }
   componentWillUnmount() {
@@ -260,6 +265,7 @@ class DocEditor extends React.Component {
     });
   }
   decreaseSize() {
+
     const newDSize = this.state.currentFontSize - 1;
     if (!styleMap[newDSize]) {
       styleMap[newDSize] = {
@@ -275,50 +281,46 @@ class DocEditor extends React.Component {
   render() {
     return (
       <div>
-        <h1>Editing your document </h1>
-        <p>Id: {this.props.match.params.dochash}</p>
-          {this.state.top && (
-            <div
-              style={{
-                position: 'absolute',
-                backgroundColor: 'red',
-                width: '2px',
-                height: this.state.height,
-                top: this.state.top,
-                left: this.state.left
-              }}
-              >
-            </div>
-          )}
-          <div>
-            <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
-          </div>
-
-          <div>
-            <AppBar title={this.state.title}/>
-          </div>
-          <div className="toolbar">
-            <ToolBar
-              Click={this.onClick}
-              colorHandle={this.formatColor}
-              sizeIncrease={this.increaseSize}
-              sizeDecrease={this.decreaseSize}
-              // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
-            />
-          </div>
-          <div className="editor">
-            <Editor
-              // ref="editor"
-              blockRenderMap={blockTypes}
-              customStyleMap={styleMap}
-              editorState={this.state.editorState}
-              handleKeyCommand={this.handleKeyCommand}
-              onChange={this.onChange}/>
-          </div>
-          <div>
-          <button onClick={() => this.saveDoc()}>Save the Document</button>
-          </div>
-          </div>
+        {this.state.top && (
+          <div
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              width: '2px',
+              height: this.state.height,
+              top: this.state.top,
+              left: this.state.left,
+            }}
+          />
+        )}
+        <div>
+          <AppBar title="CTF_Documents" />
+          <p>Id: {this.props.match.params.dochash}</p>
+        </div>
+        <div>
+          <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+        </div>
+        <div className="toolbar">
+          <ToolBar
+            Click={this.onClick}
+            colorHandle={this.formatColor}
+            sizeIncrease={this.increaseSize}
+            sizeDecrease={this.decreaseSize}
+            // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
+          />
+        </div>
+        <div className="editor">
+          <Editor
+            // ref="editor"
+            blockRenderMap={blockTypes}
+            customStyleMap={styleMap}
+            editorState={this.state.editorState}
+            handleKeyCommand={this.handleKeyCommand}
+            onChange={this.onChange}
+          />
+        </div>
+        <button onClick={() => this.saveDoc()}>Save the Document</button>
+      </div>
     );
   }
 }

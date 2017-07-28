@@ -1,27 +1,23 @@
-// import React from 'react';
-// import {
-//   Card,
-//   CardTitle
-// } from 'material-ui/Card';
-//
-//
-// const DocDirectory = () => (
-//   <Card className="container">
-//     <CardTitle title="React Application" subtitle="This is the home page." />
-//   </Card>
-// );
+import {
+  Card,
+  CardTitle,
+} from 'material-ui/Card';
+
+import Paper from 'material-ui/Paper';
+import AppBar from 'material-ui/AppBar';
+import { GridList, GridTile } from 'material-ui/GridList';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 import React from 'react';
-import {
-  Link
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class DocDirectory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userDocs: [],
-      error: null
+      error: null,
     };
   }
 
@@ -31,119 +27,117 @@ class DocDirectory extends React.Component {
 
   loadDocs() {
     fetch('http://localhost:3000/getuserdocuments', {
-        credentials: 'include'
-      })
+      credentials: 'include',
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           this.setState({
             userDocs: resp.userDocs,
-            error: null
+            error: null,
           });
         } else {
           this.setState({
-            error: resp.error.errmsg
-          })
+            error: resp.error.errmsg,
+          });
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
   }
 
   newDoc(title) {
     fetch('http://localhost:3000/newdocument', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title
-        })
-      })
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+      }),
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           this.setState({
             userDocs: this.state.userDocs.concat(resp.newDoc),
-            error: null
+            error: null,
           });
         } else {
           this.setState({
-            error: resp.error.errmsg
-          })
+            error: resp.error.errmsg,
+          });
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
   }
 
   addSharedDoc(docId) {
     let docToAdd;
     fetch(`http://localhost:3000/getdocument/${docId}`, {
-        credentials: 'include'
-      })
+      credentials: 'include',
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (!resp.success) throw resp.error;
 
         docToAdd = resp.document;
 
         return fetch(`http://localhost:3000/addshareddoc/${docId}`, {
-          credentials: 'include'
+          credentials: 'include',
         });
       })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (!resp.success) throw resp.error;
 
         this.setState({
           userDocs: this.state.userDocs.concat(docToAdd),
-          error: null
+          error: null,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
-          error: err.errmsg
-        })
+          error: err.errmsg,
+        });
       });
   }
 
   render() {
     let newDocTitleField;
     let shareIdField;
+
     return (
       <div>
-        <h1>Documents Directory</h1>
+        <AppBar style={{ margin: '0' }} title="Your Directory" />
         <p>{this.state.error}</p>
-        <input
-          ref={node => {newDocTitleField = node}}
-          placeholder="new document title"
+        <TextField hintText="New document title" onChange={(e) => { newDocTitleField = e.target; }} />
+        <FlatButton
+          label="Create Document"
+          primary
+          onTouchTap={() => {
+            this.newDoc(newDocTitleField.value);
+            newDocTitleField.value = '';
+          }}
         />
-        <button onClick={() => {
-          this.newDoc(newDocTitleField.value);
-          newDocTitleField.value = '';
-        }}>Create Document</button>
-        <div style={{outline: 'solid', padding: 10, margin: 10}}>
-          <label>My Documents</label>
-          <div>
-            {this.state.userDocs.map(doc => <div key={doc._id}><Link to={`/edit/${doc._id}`}>{doc.title}</Link></div>)}
-          </div>
-        </div>
-        <div>
-          <input
-            ref={node => {shareIdField = node}}
-            placeholder="paste a doc id shared with you here"
-          />
-          <button onClick={() => {
+        <TextField hintText="Document ID" onChange={(e) => { shareIdField = e.target; }} />
+        <FlatButton
+          label="Add Shared Document"
+          primary
+          onTouchTap={() => {
             this.addSharedDoc(shareIdField.value);
             shareIdField.value = '';
-          }}>Add Shared Document</button>
-        </div>
+          }}
+        />
+        <Paper zDepth={2} style={{ display: 'flex' }}>
+          {this.state.userDocs.map(doc => <div style={{ display: 'block' }} key={doc._id}><Link to={`/edit/${doc._id}`}><img height={'40px'} alt={'hello'} src='./public/images/thedoc.png' /></Link><p>{doc.title}</p></div>)}
+        </Paper>
       </div>
-    )
+    );
   }
 }
 

@@ -35,7 +35,7 @@ app.use(session({
 passport.use(new LocalStrategy(
   ((username, password, done) => {
     User.findOne({
-      username,
+      username
     }, (err, user) => {
       if (err) {
         return done(err);
@@ -69,45 +69,36 @@ app.use(passport.session());
 /* END OF PASSPORT SETUP */
 
 /* SOCKET SETUP */
-io.on('connection', socket => {
-
+io.on('connection', (socket) => {
   socket.on('join', ({
-    doc
+    doc,
   }) => {
     console.log('join', doc);
     socket.emit('back', {
-      doc
+      doc,
     });
-    socket.join(doc) /// join a room named doc
+    socket.join(doc); // / join a room named doc
     socket.theOneRoom = doc;
 
     socket.broadcast.to(doc).emit('userJoin'); // server sending out event within the room
     // io.sockets.emit('userJoin');
   });
 
-  socket.on('newContent', stringifiedContent => {
+  socket.on('newContent', (stringifiedContent) => {
     socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', stringifiedContent);
-
   });
-  socket.on('cursorMove', selection => {
-    console.log('selection', selection);
+  socket.on('cursorMove', (selection) => {
     socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', selection);
-
   });
 
   socket.on('disconnect', () => {
-    console.log('disconnect');
-    socket.leave(socket.theOneRoom); /// when user leave the room
+    // console.log('disconnect');
+    socket.leave(socket.theOneRoom); // / when user leave the room
     socket.broadcast.to(socket.theOneRoom).emit('userLeft');
   });
-
-
-})
+});
 /* END OF SOCKET SETUP */
 
-app.get('/register', (req, res) => {
-  res.send('register');
-});
 /* AUTH ROUTES */
 app.post('/register', (req, res) => {
   console.log(req.body);
@@ -125,6 +116,13 @@ app.post('/register', (req, res) => {
         success: true,
       });
     }
+  });
+});
+
+app.get('/login', (req, res) => {
+  res.json({
+    success: true,
+    user: req.user,
   });
 });
 

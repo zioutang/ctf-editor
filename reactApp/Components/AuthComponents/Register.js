@@ -73,7 +73,12 @@ class Register extends React.Component {
             <div className="field">
               <label className="label">Username</label>
               <div className="control has-icons-left">
-                <input className="input" ref={(node) => { usernameField = node; }} placeholder="Username" type="text" />
+                <input
+                  className="input"
+                  ref={(node) => { usernameField = node; }}
+                  placeholder="Username"
+                  type="text"
+                />
                 <span className="icon is-left">
                   <i className="fa fa-user" />
                 </span>
@@ -88,7 +93,12 @@ class Register extends React.Component {
             <div className="field">
               <label className="label">Password</label>
               <div className="control has-icons-left">
-                <input className="input" ref={(node) => { passwordField = node; }} placeholder="Password" type="password" />
+                <input
+                  className="input"
+                  ref={(node) => { passwordField = node; }}
+                  placeholder="Password"
+                  type="password"
+                />
                 <span className="icon is-left">
                   <i className="fa fa-lock" />
                 </span>
@@ -103,7 +113,12 @@ class Register extends React.Component {
             <div className="field">
               <label className="label">Repeat Password</label>
               <div className="control has-icons-left">
-                <input className="input" ref={(node) => { repeatPasswordField = node; }} placeholder="Password" type="password" />
+                <input
+                  className="input"
+                  ref={(node) => { repeatPasswordField = node; }}
+                  placeholder="Password"
+                  type="password"
+                />
                 <span className="icon is-left">
                   <i className="fa fa-lock" />
                 </span>
@@ -124,7 +139,10 @@ class Register extends React.Component {
                   repeatPasswordField.value)}
               >Register
               </button>
-              <button className="button is-link" onClick={() => this.props.history.push('/')}>Back To Login</button>
+              <button
+                className="button is-link"
+                onClick={() => this.props.history.push('/')}
+              >Back To Login</button>
             </div>
           </div>
         </div>

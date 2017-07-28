@@ -52,63 +52,63 @@ class DocEditor extends React.Component {
     this.decreaseSize = this.decreaseSize.bind(this);
     this.onChange = this.onChange.bind(this);
     // ///////////////
-    // this.socket = io('http://localhost:3000');
+    this.socket = io('http://localhost:3000');
     //
-    // this.socket.on('userJoin', () => {
-    //   console.log('joined');
-    // });
+    this.socket.on('userJoin', () => {
+      console.log('joined');
+    });
+
+    this.socket.on('back', ({
+      doc
+    }) => {
+      console.log('you just joined', doc);
+    });
+
+    this.socket.on('userLeft', () => {
+      console.log('user left');
+    });
+
+    this.socket.on('reveiveNewContent', stringifiedContent => {
+      const contentState = convertFromRaw(JSON.parse(stringifiedContent));
+      const newEditorState = EditorState.createWithContent(contentState);
+      this.setState({
+        editorState: newEditorState
+      })
+    });
+
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      // console.log('inc', incomingSelectionObj);
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState;
+      const ogSelection = editorState.getSelection();
+      const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
+      this.setState({
+        editorState: temporaryEditorState
+      }, () => {
+        const winSel = window.getSelection();
+        const range = winSel.getRangeAt(0);
+        const rects = range.getClientRects()[0];
+        console.log('range', range);
+        console.log('rects', rects);
+        const {
+          top,
+          left,
+          bottom
+        } = rects;
+        this.setState({
+          editorState: ogEditorState,
+          top,
+          left,
+          height: (bottom - top)
+        })
+      })
     //
-    // this.socket.on('back', ({
-    //   doc
-    // }) => {
-    //   console.log('you just joined', doc);
-    // });
+    }); /// dealling with the cursor position
     //
-    // this.socket.on('userLeft', () => {
-    //   console.log('user left');
-    // });
-    //
-    // this.socket.on('reveiveNewContent', stringifiedContent => {
-    //   const contentState = convertFromRaw(JSON.parse(stringifiedContent));
-    //   const newEditorState = EditorState.createWithContent(contentState);
-    //   this.setState({
-    //     editorState: newEditorState
-    //   })
-    // });
-    //
-    // this.socket.on('receiveNewCursor', incomingSelectionObj => {
-    //   // console.log('inc', incomingSelectionObj);
-    //   let editorState = this.state.editorState;
-    //   const ogEditorState = editorState;
-    //   const ogSelection = editorState.getSelection();
-    //   const incommingSelectionState = ogSelection.merge(incomingSelectionObj);
-    //   const temporaryEditorState = EditorState.forceSelection(ogEditorState, incommingSelectionState);
-    //   this.setState({
-    //     editorState: temporaryEditorState
-    //   }, () => {
-    //     const winSel = window.getSelection();
-    //     const range = winSel.getRangeAt(0);
-    //     const rects = range.getClientRects()[0];
-    //     console.log('range', range);
-    //     console.log('rects', rects);
-    //     const {
-    //       top,
-    //       left,
-    //       bottom
-    //     } = rects;
-    //     this.setState({
-    //       editorState: ogEditorState,
-    //       top,
-    //       left,
-    //       height: (bottom - top)
-    //     })
-    //   })
-    //
-    // }); /// dealling with the cursor position
-    //
-    // this.socket.emit('join', {
-    //   doc: this.props.match.params.dochash
-    // }); /// event to emit the target doc
+    this.socket.emit('join', {
+      doc: this.props.match.params.dochash
+    }); /// event to emit the target doc
 
     // /////////////////
     this.state = {

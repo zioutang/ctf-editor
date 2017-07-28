@@ -35,7 +35,7 @@ app.use(session({
 passport.use(new LocalStrategy(
   ((username, password, done) => {
     User.findOne({
-      username
+      username,
     }, (err, user) => {
       if (err) {
         return done(err);
@@ -186,12 +186,15 @@ app.post('/newdocument', (req, res) => {
 app.post('/savedocument/:docId', (req, res) => {
   console.log(req.params.docId);
   Doc.update({
-      _id: req.params.docId,
-    }, {
-      $set: {
-        content: req.body.content,
+    _id: req.params.docId,
+  }, {
+    $push: {
+      content: {
+        time: new Date(),
+        body: req.body.content,
       },
-    })
+    },
+  })
     .then(() => {
       res.json({
         success: true,
@@ -208,6 +211,8 @@ app.post('/savedocument/:docId', (req, res) => {
 app.get('/getdocument/:docId', (req, res) => {
   Doc.findById(req.params.docId)
     .then((foundDoc) => {
+      foundDoc.content[0].body = foundDoc.content[foundDoc.content.length - 1].body;
+      console.log('this is the document');
       res.json({
         success: true,
         document: foundDoc,
@@ -221,15 +226,31 @@ app.get('/getdocument/:docId', (req, res) => {
     });
 });
 
+app.get('/getDocumentHistory/:docId', (req, res) => {
+  Doc.findById(req.params.docId)
+    .then((foundHist) => {
+      res.json({
+        success: true,
+        history: foundHist,
+      });
+    })
+    .catch((err) => {
+      res.json({
+        success: false,
+        error: err,
+      });
+    });
+});
+
 app.get('/addshareddoc/:docId', (req, res) => {
   // To be fully correct, this route should also check that it isn't adding a duplicate
   User.update({
-      _id: req.user.id,
-    }, {
-      $push: {
-        documents: req.params.docId,
-      },
-    })
+    _id: req.user.id,
+  }, {
+    $push: {
+      documents: req.params.docId,
+    },
+  })
     .then(() => {
       res.json({
         success: true,

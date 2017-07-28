@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
 
 //
 // mongoose.connect(process.env.MONGODB_URI);
@@ -13,41 +14,41 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   documents: [{
     type: Schema.ObjectId,
-    ref: 'Doc'
-  }]
+    ref: 'Doc',
+  }],
 });
 
 const docSchema = new Schema({
   content: {
-    type: String
+    type: Array,
   },
   title: {
     type: String,
-    required: true
+    required: true,
   },
   owner: {
     type: Schema.ObjectId,
     ref: 'User',
-    required: true
-  }
+    required: true,
+  },
 });
 // Make the owner title combination unique
 docSchema.index({
   owner: 1,
-  title: 1
+  title: 1,
 }, {
-  unique: true
+  unique: true,
 });
 
 module.exports = {
   User: mongoose.model('User', userSchema),
-  Doc: mongoose.model('Doc', docSchema)
-}
+  Doc: mongoose.model('Doc', docSchema),
+};

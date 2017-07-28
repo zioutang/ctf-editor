@@ -1,7 +1,8 @@
 import React from 'react';
 // const io = require('socket.io')(http);
-const io = require('socket.io-client');
+import Paper from 'material-ui/Paper';
 
+const io = require('socket.io-client');
 
 import AppBar from 'material-ui/AppBar';
 import {
@@ -11,8 +12,8 @@ import {
   DefaultDraftBlockRenderMap,
   convertToRaw,
   convertFromRaw,
-
 } from 'draft-js';
+
 
 import {
   Map,
@@ -45,6 +46,14 @@ const styleMap = {
 class DocEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      currentFontSize: 18,
+      historyState: null,
+      showHistory: false,
+      title: 'Loading ...',
+    };
+
     this.onClick = this.onClick.bind(this);
     this.formatColor = this.formatColor.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
@@ -111,11 +120,6 @@ class DocEditor extends React.Component {
     }); // / event to emit the target doc
 
     // /////////////////
-    this.state = {
-      editorState: EditorState.createEmpty(),
-      currentFontSize: 18,
-      title: 'Loading ...',
-    };
     this.onClick = this.onClick.bind(this);
     this.formatColor = this.formatColor.bind(this);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
@@ -183,6 +187,30 @@ class DocEditor extends React.Component {
       });
   }
 
+  loadHistory() {
+    const docId = this.props.match.params.dochash;
+    fetch(`http://localhost:3000/getDocumentHistory/${docId}`, {
+      credentials: 'include',
+    })
+      .then(resp => resp.json())
+      .then((resp) => {
+        if (resp.success) {
+          this.setState({
+            historyState: resp.history.content,
+            error: null,
+          });
+          console.log(this.state.historyState);
+        } else {
+          this.setState({
+            error: resp.error.errmsg,
+          });
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   componentDidMount() {
     const docId = this.props.match.params.dochash;
     fetch(`http://localhost:3000/getdocument/${docId}`, {
@@ -190,8 +218,9 @@ class DocEditor extends React.Component {
     })
       .then(resp => resp.json())
       .then((resp) => {
+        this.loadHistory();
         if (resp.success) {
-          const raw = resp.document.content;
+          const raw = resp.document.content[0].body;
           if (raw) {
             const contentState = convertFromRaw(JSON.parse(raw));
             this.setState({
@@ -317,6 +346,13 @@ class DocEditor extends React.Component {
           />
         </div>
         <button onClick={() => this.saveDoc()}>Save the Document</button>
+        <button onClick={() => this.setState({ showHistory: !this.state.showHistory })}>Show Document History</button>
+        {this.state.showHistory ?
+          <Paper zDepth={2} style={{ display: 'flex' }}>
+            {this.state.historyState.map(doc => <div style={{ display: 'block' }} key={doc.time}><img height={'40px'} alt={'hello'} src="./public/images/thedoc.png" /><p>{doc.time}</p></div>)}
+          </Paper>
+          : null
+        }
       </div>
     );
   }

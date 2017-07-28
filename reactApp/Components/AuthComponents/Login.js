@@ -9,6 +9,9 @@ class Login extends React.Component {
   }
 
   login(username, password) {
+    if (!username || !password) {
+      this.setState({ error: 'Incorrect Username or Password' });
+    }
     fetch('http://localhost:3000/login', {
       method: 'POST',
       credentials: 'include',

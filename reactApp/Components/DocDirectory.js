@@ -113,9 +113,16 @@ class DocDirectory extends React.Component {
 
     return (
       <div>
-        <AppBar style={{ margin: '0' }} title="Your Directory" />
+        <AppBar
+          titleStyle={{ textAlign: 'center' }}
+          title="Your Directory"
+          showMenuIconButton={false}
+        />
         <p>{this.state.error}</p>
-        <TextField hintText="New document title" onChange={(e) => { newDocTitleField = e.target; }} />
+        <TextField hintText="New document title" onChange={(e) => {
+          newDocTitleField = e.target
+        }}
+        />
         <FlatButton
           label="Create Document"
           primary

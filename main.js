@@ -16,10 +16,10 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1260,
+    height: 1000,
     frame: true,
-    // titleBarStyle: 'customButtonsOnHover',
+    titleBarStyle: 'hidden',
     // transparent: false,
   });
 

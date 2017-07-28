@@ -273,14 +273,6 @@ class DocEditor extends React.Component {
         fontSize: `${newSize}px`,
       },
     };
-    // =======
-    //     const newDSize = this.state.currentFontSize - 1;
-    //     if (!styleMap[newDSize]) {
-    //       styleMap[newDSize] = {
-    //         fontSize: `${newDSize}px`
-    //       }
-    //     }
-    // >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     this.setState({
       currentFontSize: newDSize,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newDSize)),
@@ -290,7 +282,11 @@ class DocEditor extends React.Component {
   render() {
     return (
       <div>
-        {this.state.top && (
+        <AppBar
+          titleStyle={{ textAlign: 'center' }}
+          title="Document Editor"
+          showMenuIconButton={false}
+        />        {this.state.top && (
           <div
             style={{
               position: 'absolute',
@@ -302,12 +298,10 @@ class DocEditor extends React.Component {
             }}
           />
         )}
-        <div>
-          <AppBar title="CTF_Documents" />
-          <p>Id: {this.props.match.params.dochash}</p>
-        </div>
+        <p>Id: {this.props.match.params.dochash}</p>
         <div>
           <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
+          <button onClick={() => this.saveDoc()}>Save the Document</button>
         </div>
         <div className="toolbar">
           <ToolBar
@@ -328,54 +322,7 @@ class DocEditor extends React.Component {
             onChange={this.onChange}
           />
         </div>
-        <button onClick={() => this.saveDoc()}>Save the Document</button>
       </div>
-    // =======
-    //         <h1>Editing your document </h1>
-    //         <p>Id: {this.props.match.params.dochash}</p>
-    //           {this.state.top && (
-    //             <div
-    //               style={{
-    //                 position: 'absolute',
-    //                 backgroundColor: 'red',
-    //                 width: '2px',
-    //                 height: this.state.height,
-    //                 top: this.state.top,
-    //                 left: this.state.left
-    //               }}
-    //               >
-    //             </div>
-    //           )}
-    //           <div>
-    //             <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
-    //           </div>
-    //
-    //           <div>
-    //             <AppBar title={this.state.title}/>
-    //           </div>
-    //           <div className="toolbar">
-    //             <ToolBar
-    //               Click={this.onClick}
-    //               colorHandle={this.formatColor}
-    //               sizeIncrease={this.increaseSize}
-    //               sizeDecrease={this.decreaseSize}
-    //               // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
-    //             />
-    //           </div>
-    //           <div className="editor">
-    //             <Editor
-    //               // ref="editor"
-    //               blockRenderMap={blockTypes}
-    //               customStyleMap={styleMap}
-    //               editorState={this.state.editorState}
-    //               handleKeyCommand={this.handleKeyCommand}
-    //               onChange={this.onChange}/>
-    //           </div>
-    //           <div>
-    //           <button onClick={() => this.saveDoc()}>Save the Document</button>
-    //           </div>
-    //           </div>
-    // >>>>>>> b9874392f6f25008772dfec4a8261ec2b7df51c7
     );
   }
 }

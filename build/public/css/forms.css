@@ -1,8 +1,8 @@
-#root {
+/*#root {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+}*/
 
 .centered {
   text-align: center;
@@ -46,6 +46,8 @@
   /*border: 1px solid grey;*/
   height: 700px;
   width: 700px;
+  margin: auto;
+  width: 50%;
 }
 
 .login-holder {
@@ -55,6 +57,7 @@
   align-content: center;
   justify-content: center;
   box-shadow: 3px 3px 3px 3px #DBDBDB;
+  background-color: rgb(255,255,255);
 }
 
 .icon {

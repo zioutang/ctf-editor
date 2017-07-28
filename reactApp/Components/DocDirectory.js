@@ -13,7 +13,6 @@
 
 import React from 'react';
 import {
-<<<<<<< HEAD
   Link
 } from 'react-router-dom';
 
@@ -112,18 +111,13 @@ class DocDirectory extends React.Component {
       });
   }
 
-=======
-  Card,
-  CardTitle,
-} from 'material-ui/Card';
->>>>>>> 5212d01588b6fb576a0b3c6b21f7015aeb1dbb8e
 
   render() {
     let newDocTitleField;
     let shareIdField;
     return (
       <div>
-        <h1>Documents Portal</h1>
+        <h1>Documents Directory</h1>
         <p>{this.state.error}</p>
         <input
           ref={node => {newDocTitleField = node}}

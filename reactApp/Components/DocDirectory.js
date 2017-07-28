@@ -11,7 +11,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 import React from 'react';
 import {
-  Link
+  Link,
 } from 'react-router-dom';
 
 class DocDirectory extends React.Component {
@@ -19,7 +19,7 @@ class DocDirectory extends React.Component {
     super(props);
     this.state = {
       userDocs: [],
-      error: null
+      error: null,
     };
   }
 
@@ -29,83 +29,83 @@ class DocDirectory extends React.Component {
 
   loadDocs() {
     fetch('http://localhost:3000/getuserdocuments', {
-        credentials: 'include'
-      })
+      credentials: 'include',
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           this.setState({
             userDocs: resp.userDocs,
-            error: null
+            error: null,
           });
         } else {
           this.setState({
-            error: resp.error.errmsg
-          })
+            error: resp.error.errmsg,
+          });
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
   }
 
   newDoc(title) {
     fetch('http://localhost:3000/newdocument', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title
-        })
-      })
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+      }),
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (resp.success) {
           this.setState({
             userDocs: this.state.userDocs.concat(resp.newDoc),
-            error: null
+            error: null,
           });
         } else {
           this.setState({
-            error: resp.error.errmsg
-          })
+            error: resp.error.errmsg,
+          });
         }
       })
-      .catch(err => {
-        throw err
+      .catch((err) => {
+        throw err;
       });
   }
 
   addSharedDoc(docId) {
     let docToAdd;
     fetch(`http://localhost:3000/getdocument/${docId}`, {
-        credentials: 'include'
-      })
+      credentials: 'include',
+    })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (!resp.success) throw resp.error;
 
         docToAdd = resp.document;
 
         return fetch(`http://localhost:3000/addshareddoc/${docId}`, {
-          credentials: 'include'
+          credentials: 'include',
         });
       })
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp) => {
         if (!resp.success) throw resp.error;
 
         this.setState({
           userDocs: this.state.userDocs.concat(docToAdd),
-          error: null
+          error: null,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
-          error: err.errmsg
-        })
+          error: err.errmsg,
+        });
       });
   }
 
@@ -117,23 +117,37 @@ class DocDirectory extends React.Component {
       <div>
         <AppBar style={{ margin: '0' }} title="Your Directory" />
         <p>{this.state.error}</p>
-        <TextField hintText="New document title" onChange={(e)=> {newDocTitleField = e.target}} />
-        <FlatButton label="Create Document" primary={true} onTouchTap={() => {
-          this.newDoc(newDocTitleField.value);
-          newDocTitleField.value = '';
-        }}
+        <TextField hintText="New document title" onChange={(e) => { newDocTitleField = e.target; }} />
+        <FlatButton
+          label="Create Document"
+          primary
+          onTouchTap={() => {
+            this.newDoc(newDocTitleField.value);
+            newDocTitleField.value = '';
+          }}
         />
-        <TextField hintText="Document ID" onChange={(e)=> {shareIdField = e.target}} />
-        <FlatButton label="Add Shared Document" primary={true} onTouchTap={() => {
-          this.addSharedDoc(shareIdField.value);
-          shareIdField.value = '';
-        }}
+        <TextField hintText="Document ID" onChange={(e) => { shareIdField = e.target; }} />
+        <FlatButton
+          label="Add Shared Document"
+          primary
+          onTouchTap={() => {
+            this.addSharedDoc(shareIdField.value);
+            shareIdField.value = '';
+          }}
         />
         <Paper zDepth={2} style={{ display: 'flex' }}>
-          {this.state.userDocs.map(doc => <div style={{ display: 'block' }} key={doc._id}><img height={'40px'} alt={'hello'} src='./public/images/thedoc.png' /><p>{doc.title}</p></div>)}
+          {this.state.userDocs.map(doc => (
+            <div
+              style={{ display: 'block' }}
+              key={doc._id}
+              onClick={() => (console.log('clicked'))}
+            >
+              <img height={'40px'} alt={'hello'} src="./public/images/thedoc.png" />
+              <p>{doc.title}</p>
+            </div>))}
         </Paper>
       </div>
-    )
+    );
   }
 }
 

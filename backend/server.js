@@ -34,7 +34,9 @@ app.use(session({
 /* PASSPORT SETUP */
 passport.use(new LocalStrategy(
   ((username, password, done) => {
-    User.findOne({ username }, (err, user) => {
+    User.findOne({
+      username
+    }, (err, user) => {
       if (err) {
         return done(err);
       }
@@ -86,12 +88,11 @@ io.on('connection', (socket) => {
     socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', stringifiedContent);
   });
   socket.on('cursorMove', (selection) => {
-    console.log('selection', selection);
     socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', selection);
   });
 
   socket.on('disconnect', () => {
-    console.log('disconnect');
+    // console.log('disconnect');
     socket.leave(socket.theOneRoom); // / when user leave the room
     socket.broadcast.to(socket.theOneRoom).emit('userLeft');
   });
@@ -185,12 +186,12 @@ app.post('/newdocument', (req, res) => {
 app.post('/savedocument/:docId', (req, res) => {
   console.log(req.params.docId);
   Doc.update({
-    _id: req.params.docId,
-  }, {
-    $set: {
-      content: req.body.content,
-    },
-  })
+      _id: req.params.docId,
+    }, {
+      $set: {
+        content: req.body.content,
+      },
+    })
     .then(() => {
       res.json({
         success: true,
@@ -223,12 +224,12 @@ app.get('/getdocument/:docId', (req, res) => {
 app.get('/addshareddoc/:docId', (req, res) => {
   // To be fully correct, this route should also check that it isn't adding a duplicate
   User.update({
-    _id: req.user.id,
-  }, {
-    $push: {
-      documents: req.params.docId,
-    },
-  })
+      _id: req.user.id,
+    }, {
+      $push: {
+        documents: req.params.docId,
+      },
+    })
     .then(() => {
       res.json({
         success: true,

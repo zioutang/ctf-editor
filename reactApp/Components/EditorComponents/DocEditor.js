@@ -40,13 +40,8 @@ class DocEditor extends React.Component {
     this.increaseSize = this.increaseSize.bind(this);
     this.decreaseSize = this.decreaseSize.bind(this);
     this.onChange = this.onChange.bind(this);
-    // ///////////////
     this.socket = io('http://localhost:3000');
-    //
-    this.socket.on('userJoin', () => {
-      console.log('joined');
-    });
-
+    this.socket.on('userJoin', () => { console.log('joined'); })
     this.socket.on('back', ({
       doc
     }) => {

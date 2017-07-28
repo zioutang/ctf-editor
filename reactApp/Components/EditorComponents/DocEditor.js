@@ -1,7 +1,6 @@
 import React from 'react';
-// const io = require('socket.io')(http);
-const io = require('socket.io-client');
-
+import io from 'socket.io-client';
+import { Map } from 'immutable';
 
 import AppBar from 'material-ui/AppBar';
 import {
@@ -11,18 +10,8 @@ import {
   DefaultDraftBlockRenderMap,
   convertToRaw,
   convertFromRaw,
-
 } from 'draft-js';
-
-import {
-  Map,
-} from 'immutable';
-
-
-import {
-  ToolBar,
-} from './ToolBar';
-
+import { ToolBar } from './ToolBar';
 
 const blockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
@@ -155,7 +144,7 @@ class DocEditor extends React.Component {
   } // / made some change on this function
 
   saveDoc() {
-    const contentState = this.state.editorState.getCurrentContent(); // current content (the changing part)
+    const contentState = this.state.editorState.getCurrentContent();
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     const docId = this.props.match.params.dochash;
 

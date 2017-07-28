@@ -10,17 +10,17 @@ import {
   RichUtils,
   DefaultDraftBlockRenderMap,
   convertToRaw,
-  convertFromRaw
+  convertFromRaw,
 
 } from 'draft-js';
 
 import {
-  Map
+  Map,
 } from 'immutable';
 
 
 import {
-  ToolBar
+  ToolBar,
 } from './ToolBar';
 
 
@@ -46,7 +46,7 @@ class DocEditor extends React.Component {
     this.increaseSize = this.increaseSize.bind(this);
     this.decreaseSize = this.decreaseSize.bind(this);
     this.onChange = this.onChange.bind(this);
-    /////////////////
+    // ///////////////
     // this.socket = io('http://localhost:3000');
     //
     // this.socket.on('userJoin', () => {
@@ -105,7 +105,7 @@ class DocEditor extends React.Component {
     //   doc: this.props.match.params.dochash
     // }); /// event to emit the target doc
 
-    ///////////////////
+    // /////////////////
     this.state = {
       editorState: EditorState.createEmpty(),
       customStyleMap: {},
@@ -114,7 +114,7 @@ class DocEditor extends React.Component {
     this.previousHighlight = null;
   }
   onChange(editorState) {
-    ////////////////// be low is for selection highlight
+    // //////////////// be low is for selection highlight
     const selection = editorState.getSelection();
 
     if (this.previousHighlight) {
@@ -129,7 +129,7 @@ class DocEditor extends React.Component {
       console.log('cursor', selection);
       this.socket.emit('cursorMove', selection);
     }
-    ///////////////////////////
+    // /////////////////////////
 
     const contentState = editorState.getCurrentContent(); // current content (the changing part)
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
@@ -138,15 +138,14 @@ class DocEditor extends React.Component {
     this.setState({
       editorState,
     });
-
-  } /// made some change on this function
+  } // / made some change on this function
 
   saveDoc() {
     const contentState = this.state.editorState.getCurrentContent(); // current content (the changing part)
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     const docId = this.props.match.params.dochash;
 
-    /// fetch to server to save it.
+    // / fetch to server to save it.
     // credential : 'include'
     // header: {'Content-type': 'application/json'}
     // body : JSON.stringify({content: stringifiedContent })
@@ -199,8 +198,8 @@ class DocEditor extends React.Component {
     const newSize = this.state.currentFontSize + 1;
     const size = {
       [newSize]: {
-        fontSize: `${newSize}px`
-      }
+        fontSize: `${newSize}px`,
+      },
     };
     this.setState({
       customStyleMap: size,
@@ -212,8 +211,8 @@ class DocEditor extends React.Component {
     const newSize = this.state.currentFontSize - 1;
     const size = {
       [newSize]: {
-        fontSize: `${newSize}px`
-      }
+        fontSize: `${newSize}px`,
+      },
     };
     this.setState({
       customStyleMap: size,
@@ -233,10 +232,9 @@ class DocEditor extends React.Component {
               width: '2px',
               height: this.state.height,
               top: this.state.top,
-              left: this.state.left
+              left: this.state.left,
             }}
-            >
-          </div>
+          />
         )}
         <div>
           <AppBar title="CTF_Documents" />
@@ -257,9 +255,10 @@ class DocEditor extends React.Component {
             customStyleMap={this.state.customStyleMap}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}/>
+            onChange={this.onChange}
+          />
         </div>
-        </div>
+      </div>
     );
   }
 }

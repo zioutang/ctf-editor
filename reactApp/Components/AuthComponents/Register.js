@@ -40,25 +40,68 @@ class Register extends React.Component {
     let passwordField;
     let repeatPasswordField;
     return (
-      <div>
-        <h1>Register</h1>
-        <p>{this.state.error}</p>
-        <input ref={(node) => { usernameField = node; }} placeholder="username" type="text" />
-        <br />
-        <input ref={(node) => { passwordField = node; }} placeholder="password" type="password" />
-        <br />
-        <input ref={(node) => { repeatPasswordField = node; }} placeholder="password" type="password" />
-        <br />
-        <button
-          onClick={() => this.register(
-            usernameField.value,
-            passwordField.value,
-            repeatPasswordField.value)}
-        >
-          Register
-        </button>
-        <br />
-        <button onClick={() => this.props.history.push('/')}>Back to Login</button>
+      <div className="form">
+        <div className="login-holder">
+
+          <div className="title-register">
+            Register
+          </div>
+
+          <div className="centered">
+            <p className="help is-danger">{this.state.error}</p>
+          </div>
+
+          <div className="field-outer">
+            <div className="field">
+              <label className="label">Username</label>
+              <div className="control has-icons-left">
+                <input className="input" ref={(node) => { usernameField = node; }} placeholder="Username" type="text" />
+                <span className="icon is-left">
+                  <i className="fa fa-user" />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="field-outer">
+            <div className="field">
+              <label className="label">Password</label>
+              <div className="control has-icons-left">
+                <input className="input" ref={(node) => { passwordField = node; }} placeholder="Password" type="password" />
+                <span className="icon is-left">
+                  <i className="fa fa-user" />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="field-outer">
+            <div className="field">
+              <label className="label">Repeat Password</label>
+              <div className="control has-icons-left">
+                <input className="input" ref={(node) => { repeatPasswordField = node; }} placeholder="Password" type="password" />
+                <span className="icon is-left">
+                  <i className="fa fa-user" />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="buttons">
+            <div className="field">
+              <button
+                className="button is-primary"
+                onClick={() => this.register(
+                  usernameField.value,
+                  passwordField.value,
+                  repeatPasswordField.value)}
+              >Register
+              </button>
+              <button className="button is-link" onClick={() => this.props.history.push('/')}>Back To Login</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   }

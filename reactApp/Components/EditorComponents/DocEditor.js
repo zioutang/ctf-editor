@@ -321,23 +321,29 @@ class DocEditor extends React.Component {
             className="appbar"
             titleStyle={{ textAlign: 'center' }}
             title={`Document Editor | ID: ${this.props.match.params.dochash}`}
-            showMenuIconButton={false}
+            // showMenuIconButton={false}
+            iconElementLeft={<button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>}
+            iconElementRight={<div>
+              <button onClick={() => this.setState({ showHistory: !this.state.showHistory })}>Show Document History</button>
+              <button onClick={() => this.saveDoc()}>Save the Document</button>
+            </div>}
           />
-          <div>
-            <button onClick={() => this.props.history.push('/docdirect')}>{'<'} Back to Documents Directory</button>
-            <button onClick={() => this.saveDoc()}>Save the Document</button>
-          </div>
+
           <div className="toolbar" style={{ textAlign: 'center' }}>
             <ToolBar
               Click={this.onClick}
               colorHandle={this.formatColor}
               sizeIncrease={this.increaseSize}
               sizeDecrease={this.decreaseSize}
-              // currentInlineStyle={this.state.editorState.getCurrentInlineStyle()}
             />
           </div>
         </div>
-
+        {this.state.showHistory ?
+          <Paper zDepth={2} style={{ display: 'flex' }}>
+            {this.state.historyState.map(doc => <div style={{ display: 'block', height: '200px' }} key={doc.time}><img style={{height: '80px'}} alt={'hello'} src="./public/images/thedoc.png" /><p>{doc.time}</p></div>)}
+          </Paper>
+          : null
+        }
         <div className="editor">
           <Editor
             // ref="editor"
@@ -346,16 +352,10 @@ class DocEditor extends React.Component {
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
+
           />
         </div>
-        <button onClick={() => this.saveDoc()}>Save the Document</button>
-        <button onClick={() => this.setState({ showHistory: !this.state.showHistory })}>Show Document History</button>
-        {this.state.showHistory ?
-          <Paper zDepth={2} style={{ display: 'flex' }}>
-            {this.state.historyState.map(doc => <div style={{ display: 'block' }} key={doc.time}><img height={'40px'} alt={'hello'} src="./public/images/thedoc.png" /><p>{doc.time}</p></div>)}
-          </Paper>
-          : null
-        }
+
       </div>
     );
   }

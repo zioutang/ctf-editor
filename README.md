@@ -1,5 +1,4 @@
 # ctf-editor
-Overview
 
 
 ## The purpose of this project:

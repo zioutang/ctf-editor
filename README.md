@@ -11,9 +11,9 @@ There is a real opportunity to reduce the clicks and time needed to access, edit
 
 ## Some key features:
 
-Users’ documents support rich-text formatting (bold text, italics, alignment, etc.)
-Users use document-specific URLs to access and modify their documents. 
-Users can send these document-specific URLs to people they would like to collaborate on documents with. 
+1. Users’ documents support rich-text formatting (bold text, italics, alignment, etc.)
+1. Users use document-specific URLs to access and modify their documents. 
+1. Users can send these document-specific URLs to people they would like to collaborate on documents with. 
 When multiple users are editing the same document, other users can see what edits are being made by which users in real-time. 
 All documents are persistent in a database. 
 Finally, users can see version histories of documents that they are collaborators on. In other words, they can navigate to past versions of documents.

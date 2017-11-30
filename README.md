@@ -1,4 +1,4 @@
-# ctf-editor
+# Agile Editor
 
 
 ## The purpose of this project:
